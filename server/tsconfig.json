@@ -1,0 +1,14 @@
+{
+    "compileOnSave": true,
+    "include": ["./src/**/*.ts"],
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "outDir": "./build",
+        "noStrictGenericChecks": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "watch": true,
+        "resolveJsonModule": true
+    }
+}
