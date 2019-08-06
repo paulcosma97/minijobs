@@ -78,6 +78,9 @@ body {
   border-color: var(--color-primary) !important;
 }
 
+#navbar .ant-menu-item {
+  width: 33.33%;
+}
 
 /* Scrollbar */
 
@@ -89,4 +92,5 @@ body {
 /* Layout */
 .ant-layout {
   margin: 5px;
+  margin-bottom: 50px;
 }

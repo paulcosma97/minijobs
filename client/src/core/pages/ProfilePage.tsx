@@ -1,5 +1,6 @@
 import React from 'react';
-import { Layout, Avatar } from 'antd';
+import { Layout, Avatar, Menu } from 'antd';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { State } from '../../shared/state/store';
 import { ProfileState } from '../../shared/state/reducers/profile.reducer';
@@ -9,14 +10,6 @@ class ProfilePage extends React.Component<{
   profile: ProfileState;
   logoutProfile: typeof logoutProfile;
 }> {
-  componentDidMount() {
-    document
-      .querySelectorAll('.ant-menu-item-selected')
-      .forEach(item => item.classList.remove('ant-menu-item-selected'));
-
-    document.querySelector(`#profile`).classList.add('ant-menu-item-selected');
-  }
-
   logout = () => {
     this.props.logoutProfile();
   };
@@ -41,7 +34,13 @@ class ProfilePage extends React.Component<{
             {this.props.profile.data.lastName}
           </span>
         </div>
-        <Layout.Content style={{ paddingTop: '53px' }}>content</Layout.Content>
+        <Layout.Content style={{ paddingTop: '53px' }}>
+          <Menu mode="vertical">
+            <Menu.Item>
+              <Link to="/privacy-policy">Politica de confidentialitate</Link>
+            </Menu.Item>
+          </Menu>
+        </Layout.Content>
       </React.Fragment>
     );
   }

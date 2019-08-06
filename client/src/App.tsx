@@ -6,6 +6,11 @@ import { Provider } from 'react-redux';
 import { store } from './shared/state/store';
 import ApplicationRouter from './core/components/ApplicationRouter';
 
+window.addEventListener('beforeinstallprompt', (e: any) => {
+  console.log(e);
+  e.prompt();
+});
+
 const OfflineOverlay: React.FC<any> = () => {
   return (
     <div

@@ -1,12 +1,7 @@
 import React from 'react';
 import Navbar from '../../shared/components/navbar/Navbar';
 import { Layout } from 'antd';
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-  withRouter
-} from 'react-router-dom';
+import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
 import { connect } from 'react-redux';
 import { loadProfile } from '../../shared/state/actions/profile.action';
@@ -15,6 +10,7 @@ import { ProfileState } from '../../shared/state/reducers/profile.reducer';
 import ProfilePage from '../pages/ProfilePage';
 import ListedJobsPage from '../pages/ListedJobsPage';
 import RequiredJobsPage from '../pages/RequiredJobsPage';
+import PrivacyPolicyPage from '../pages/PrivacyPolicyPage';
 
 class ApplicationRouter extends React.Component<{
   loadProfile: Function;
@@ -37,11 +33,14 @@ class ApplicationRouter extends React.Component<{
                   <Route path="/profile" component={ProfilePage} />
                   <Route path="/listed-jobs" component={ListedJobsPage} />
                   <Route path="/required-jobs" component={RequiredJobsPage} />
+                  <Route path="/privacy-policy" component={PrivacyPolicyPage} />
                 </React.Fragment>
               )}
               <Route path="/login" component={LoginPage} />
 
-              {window.location.pathname === '/' && <Redirect to="/profile" />}
+              {window.location.href.endsWith('/profile') && (
+                <Redirect to="/profile" />
+              )}
             </Layout.Content>
           </Layout>
 
