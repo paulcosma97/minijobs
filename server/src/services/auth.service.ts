@@ -1,10 +1,12 @@
 import { verify, sign, VerifyErrors } from 'jsonwebtoken';
-import { RequestHandler } from 'express';
+import { RequestHandler, Response } from 'express';
 import { getRepository } from 'typeorm';
-import { User } from '../models/user.model';
+import { User, defaultPermissionMask } from '../models/user.model';
 import { handleError, UnauthorizedError, ForbiddenError } from '../utils/error-handler';
 import env from '../configs/env';
 import { UserPermissionMask, hasPermissions } from '../utils/permissions';
+import axios from "axios";
+import FacebookProfile from '../dtos/facebook-profile.dto';
 
 export enum AuthenticatedState {
     AUTHENTICATED,
@@ -83,4 +85,59 @@ export function decodeToken<T>(token: string): Promise<[T, VerifyErrors]> {
 
 export function createToken(token: JWTToken): Promise<string> {
     return new Promise((resolve, reject) => sign(token, env.jwt.secret, (err, token: string) => err ? reject(err) : resolve(token)));
+}
+
+export async function authenticate(accessToken: string, response: Response): Promise<User> {
+    const profile = await getFacebookProfile(accessToken);
+    const user = await createOrUpdateUser(profile);
+    await setAuthCookie(user, response);
+    return user;
+} 
+
+function getFacebookProfile(accessToken: string): Promise<FacebookProfile> {
+    return axios
+    .get<FacebookProfile>(
+      "https://graph.facebook.com/v4.0/me?fields=name,first_name,last_name,picture,email&access_token=" +
+        accessToken
+    )
+    .then(res => res.data)
+}
+
+async function createOrUpdateUser(profile: FacebookProfile): Promise<User> {
+    const repository = await getRepository(User);
+    let found = await repository.findOne({
+      where: { email: profile.email }
+    });
+
+    if (!found) {
+      const user: User = {
+        email: profile.email,
+        firstName: profile.first_name,
+        lastName: profile.last_name,
+        picture: profile.picture.data.url,
+        permissionMask: defaultPermissionMask,
+        lastViewed: []
+      };
+
+      found = await repository.save(user);
+    } else {
+      found.firstName = profile.first_name;
+      found.lastName = profile.last_name;
+      found.picture = profile.picture.data.url;
+      found = await repository.save(found);
+    }
+
+    return found;
+}
+
+async function setAuthCookie(user: User, response: Response) {
+    const token = await createToken({
+        email: user.email,
+        expires: new Date().getTime() + JWTCookieMaxAge
+    });
+
+    response.cookie(JWTCookieName, token, {
+        maxAge: JWTCookieMaxAge,
+        httpOnly: true
+    });
 }

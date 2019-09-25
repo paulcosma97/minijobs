@@ -1,11 +1,11 @@
 import { User } from "../models/user.model";
 import { getRepository } from "typeorm";
+import logger from "../services/logger.service";
 
 export async function seedDatabase() {
-    const userRepository = await getRepository(User);
+  const userRepository = await getRepository(User);
 
-    console.log('Seed database...')
+  logger.info("Seed database...");
 }
 
-const userSeed: User[] = [
-]
+const userSeed: User[] = [];

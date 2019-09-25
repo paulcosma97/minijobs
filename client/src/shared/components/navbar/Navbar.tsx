@@ -6,13 +6,20 @@ type NavbarLink = { link: string; icon: string; key: string };
 
 class Navbar extends React.Component<{ items: NavbarLink[] }> {
   state = {
-    selectedMenu:
-      this.props.items.find(it => window.location.href.includes(it.link)).key ||
-      'profile'
+    selectedMenu: this.getCurrentItemKey()
   };
 
   componentWillMount() {
     this.watchActiveLink();
+  }
+
+  getCurrentItemKey() {
+    const item = this.props.items.find(it => window.location.href.includes(it.link));
+    if (!item) {
+      return 'profile'
+    }
+
+    return item.key;
   }
 
   watchActiveLink() {

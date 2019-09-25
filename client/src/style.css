@@ -5,6 +5,7 @@
   --color-primary: #df18a0;
 }
 
+.ant-layout,
 body {
   background: var(--color-background-primary)
 }
