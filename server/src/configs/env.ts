@@ -18,7 +18,8 @@ interface Environment {
     },
     jwt: {
         secret: string
-    }
+    },
+    administrators: string[]
 }
 
 export default env as Environment;

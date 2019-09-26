@@ -1,14 +1,16 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { UserPermissionMask, composePermissionMask } from '../utils/permissions';
-import { Job } from './job.model';
+import { ListedJob } from './listed-job.model';
 import { UserRating } from './user-rating.model';
+import { Job } from './job.model';
+import { RequiredJob } from './required-job.model';
 
 export const defaultPermissions: UserPermissionMask[] = [
     UserPermissionMask.CanLogin,
     UserPermissionMask.CanReadMessages,
     UserPermissionMask.CanWriteMessages,
-    UserPermissionMask.CanViewJobs,
-    UserPermissionMask.CanCreateJobs,
+    UserPermissionMask.CanViewListedJobs,
+    UserPermissionMask.CanCreateListedJobs,
 ];
 
 export const defaultPermissionMask: number = composePermissionMask(defaultPermissions);
@@ -34,13 +36,19 @@ export class User {
     @Column({ default: defaultPermissionMask })
     permissionMask: number;
 
-    @OneToMany(type => Job, job => job.user)
-    jobs?: Job[]
+    @OneToMany(type => ListedJob, listedJob => listedJob.user)
+    listedJobs?: ListedJob[]
+
+    @OneToMany(type => RequiredJob, requiredJob => requiredJob.user)
+    requiredJobs?: RequiredJob[]
 
     @JoinTable()
-    @ManyToMany(type => Job, job => job.lastViewedBy)
+    @ManyToMany(type => Job, listedJob => listedJob.lastViewedBy)
     lastViewed?: Job[];
 
     @OneToMany(type => UserRating, userRating => userRating.user)
     ratings?: UserRating[];
+
+    @OneToMany(type => UserRating, userRating => userRating.ratedBy)
+    ownRatings?: UserRating[];
 }

@@ -9,6 +9,9 @@ export class UserRating {
   @ManyToOne(type => User, user => user.ratings)
   user: User;
 
-  @Column({ nullable: false })
+  @ManyToOne(type => User, user => user.ownRatings)
+  ratedBy: User;
+
+  @Column({ nullable: false, type: 'float' })
   rating: number
 }

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { Job } from "./job.model";
+import { ListedJob } from "./listed-job.model";
 
 @Entity()
 export class File {
@@ -9,6 +9,6 @@ export class File {
   @Column({ nullable: false })
   path: string;
 
-  @ManyToOne(type => Job, job => job.pictures)
-  job: Job;
+  @ManyToOne(type => ListedJob, listedJob => listedJob.pictures)
+  listedJob: ListedJob;
 }

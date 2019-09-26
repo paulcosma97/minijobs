@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, Column } from 'typeorm';
-import { Job } from './job.model';
+import { ListedJob } from './listed-job.model';
 
 @Entity()
 export class Category {
@@ -9,12 +9,12 @@ export class Category {
     @Column({ nullable: false, length: 50 })
     name: string;
 
-    @OneToMany(type => Category, category => category.children, { eager: true })
+    @ManyToOne(type => Category, category => category.children, { eager: true })
     parent?: Category;
 
-    @ManyToOne(type => Category, category => category.parent)
+    @OneToMany(type => Category, category => category.parent)
     children?: Category[];
 
-    @OneToMany(type => Job, job => job.category)
-    jobs?: Job[];
+    @OneToMany(type => ListedJob, listedJob => listedJob.category)
+    listedJobs?: ListedJob[];
 }

@@ -3,8 +3,8 @@ import { User } from '../models/user.model';
 export enum UserPermissionMask {
     None = 0,
     CanLogin = 1,
-    CanViewJobs = 2,
-    CanCreateJobs = 4,
+    CanViewListedJobs = 2,
+    CanCreateListedJobs = 4,
     CanReadMessages = 8,
     CanWriteMessages = 16
 }
@@ -30,4 +30,8 @@ export function hasPermissions(who: User | number, permissions: UserPermissionMa
 
 export function composePermissionMask(permissions: UserPermissionMask[]): number {
     return permissions.reduce((sum, current) => sum + current);
+}
+
+export function computeAdminPermissionMask(): number {
+    return Object.values(UserPermissionMask).filter(val => !isNaN(+val)).map(val => +val).reduce((sum, current) => sum + current);
 }

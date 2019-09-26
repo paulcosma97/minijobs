@@ -4,7 +4,7 @@ import logger from "../services/logger.service";
 
 export class MiniJobsError extends Error {
   // Required to check type because instanceof MiniJobsError doesn't work
-  public readonly miniJobsError = true;
+  public readonly MiniJobsError = true;
 
   constructor(public statusCode: number, public info?: string) {
     super();
@@ -30,7 +30,7 @@ export class BadRequestError extends MiniJobsError {
 }
 
 export const handleError = (res: Response) => (e: any | MiniJobsError) => {
-  if (e.miniJobsError) {
+  if (e.MiniJobsError) {
     res.status(e.statusCode);
     return res.json({
       error: {

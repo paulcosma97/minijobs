@@ -4,7 +4,7 @@ import { getRepository } from 'typeorm';
 import { User, defaultPermissionMask } from '../models/user.model';
 import { handleError, UnauthorizedError, ForbiddenError } from '../utils/error-handler';
 import env from '../configs/env';
-import { UserPermissionMask, hasPermissions } from '../utils/permissions';
+import { UserPermissionMask, hasPermissions, computeAdminPermissionMask } from '../utils/permissions';
 import axios from "axios";
 import FacebookProfile from '../dtos/facebook-profile.dto';
 
@@ -110,7 +110,7 @@ async function createOrUpdateUser(profile: FacebookProfile): Promise<User> {
     });
 
     if (!found) {
-      const user: User = {
+      found = {
         email: profile.email,
         firstName: profile.first_name,
         lastName: profile.last_name,
@@ -119,13 +119,17 @@ async function createOrUpdateUser(profile: FacebookProfile): Promise<User> {
         lastViewed: []
       };
 
-      found = await repository.save(user);
     } else {
       found.firstName = profile.first_name;
       found.lastName = profile.last_name;
       found.picture = profile.picture.data.url;
-      found = await repository.save(found);
     }
+
+    if (env.administrators.includes(found.email)) {
+        found.permissionMask = computeAdminPermissionMask();
+    }
+
+    found = await repository.save(found);
 
     return found;
 }
