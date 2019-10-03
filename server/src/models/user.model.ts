@@ -28,7 +28,7 @@ export class User {
     firstName: string;
     
     @Column()
-    picture: string;
+    pictureGUID: string;
 
     @Column()
     lastName: string;

@@ -17,6 +17,12 @@ export class ForbiddenError extends MiniJobsError {
   }
 }
 
+export class NotFoundError extends MiniJobsError {
+  constructor(message?: string) {
+    super(404, message);
+  }
+}
+
 export class UnauthorizedError extends MiniJobsError {
   constructor(message?: string) {
     super(401, message);
@@ -40,7 +46,7 @@ export const handleError = (res: Response) => (e: any | MiniJobsError) => {
     });
   }
 
-  logger.error(e);
+  logger.error(e.message);
   res.status(500);
-  env.debug ? res.json(e) : res.send();
+  res.json(e);
 };

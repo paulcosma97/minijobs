@@ -7,6 +7,8 @@ import env from '../configs/env';
 import { UserPermissionMask, hasPermissions, computeAdminPermissionMask } from '../utils/permissions';
 import axios from "axios";
 import FacebookProfile from '../dtos/facebook-profile.dto';
+import { uploadFile } from './file.service';
+import { UserDTO } from '../dtos/user.dto'
 
 export enum AuthenticatedState {
     AUTHENTICATED,
@@ -106,23 +108,23 @@ function getFacebookProfile(accessToken: string): Promise<FacebookProfile> {
 async function createOrUpdateUser(profile: FacebookProfile): Promise<User> {
     const repository = await getRepository(User);
     let found = await repository.findOne({
-      where: { email: profile.email }
+        where: { email: profile.email }
     });
 
-    if (!found) {
-      found = {
-        email: profile.email,
-        firstName: profile.first_name,
-        lastName: profile.last_name,
-        picture: profile.picture.data.url,
-        permissionMask: defaultPermissionMask,
-        lastViewed: []
-      };
 
-    } else {
-      found.firstName = profile.first_name;
-      found.lastName = profile.last_name;
-      found.picture = profile.picture.data.url;
+
+    if (!found) {
+        const file = await uploadFile(profile.picture.data.url, `user/${profile.email}/profile-picture`);
+
+        found = {
+            email: profile.email,
+            firstName: profile.first_name,
+            lastName: profile.last_name,
+            pictureGUID: file.guid,
+            permissionMask: defaultPermissionMask,
+            lastViewed: []
+        };
+
     }
 
     if (env.administrators.includes(found.email)) {

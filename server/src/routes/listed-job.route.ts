@@ -8,4 +8,4 @@ export const router = Router();
 
 router.get('/listed-job',
   restrictAccess({ authenticated: AuthenticatedState.AUTHENTICATED, permissions: [ UserPermissionMask.CanViewListedJobs ] }), 
-  (req, res) => ListedJobService.fetchListedJobs(req.query.page).then(ListedJobs => res.json(ListedJobs)).catch(handleError(res)));
+  (req, res) => ListedJobService.fetchListedJobs(req.query && req.query.page).then(ListedJobs => res.json(ListedJobs)).catch(handleError(res)));

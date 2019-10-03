@@ -2,6 +2,7 @@ import { Entity, TableInheritance, PrimaryGeneratedColumn, ManyToOne, Column, On
 import { Category } from './category.model';
 import { User } from './user.model';
 import { File } from './file.model';
+import { FileGUID } from './file-guid.model';
 
 @Entity()
 @TableInheritance({ column: { type: "varchar", name: "type" } })
@@ -18,8 +19,8 @@ export class Job {
   @Column({ nullable: false, length: 1500 })
   description: string;
 
-  @OneToMany(type => File, file => file.listedJob)
-  pictures: File[];
+  @ManyToOne(type => FileGUID, file => file.guid, { eager: true })
+  pictureGUIDs: FileGUID[];
 
   @ManyToMany(type => User, user => user.lastViewed)
   lastViewedBy?: User[];

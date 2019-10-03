@@ -9,7 +9,7 @@ export class Category {
     @Column({ nullable: false, length: 50 })
     name: string;
 
-    @ManyToOne(type => Category, category => category.children, { eager: true })
+    @ManyToOne(type => Category, category => category.children)
     parent?: Category;
 
     @OneToMany(type => Category, category => category.parent)

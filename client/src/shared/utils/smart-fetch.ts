@@ -47,3 +47,7 @@ for (const method of ['get', 'post', 'delete', 'put']) {
 }
 
 export default smartFetch;
+
+if (!environment.production) {
+  (window as any).smartFetch = smartFetch;
+}

@@ -9,6 +9,6 @@ export class File {
   @Column({ nullable: false })
   path: string;
 
-  @ManyToOne(type => ListedJob, listedJob => listedJob.pictures)
-  listedJob: ListedJob;
+  @Column({ unique: true, nullable: false, length: 36 })
+  guid: string;
 }

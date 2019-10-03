@@ -19,7 +19,19 @@ interface Environment {
     jwt: {
         secret: string
     },
-    administrators: string[]
+    administrators: string[],
+    aws: {
+        credentials: {
+            accessKey: string,
+            secretAccessKey: string
+        },
+        s3: {
+            bucket: {
+                name: string,
+                url: string
+            }
+        }
+    }
 }
 
 export default env as Environment;
