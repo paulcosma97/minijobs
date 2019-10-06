@@ -48,8 +48,8 @@ let categorySeed2 = [
 ];
 
 let listedJobSeed: ListedJob[] = [
-  { id: 1, category: categorySeed2[2] /** Programare si IT */, name: 'crea o pagina web', description: 'my description', user: userSeed[1] /** Katona */, pictureGUIDs: [], computedRating: 4.5 },
-  { id: 2, category: categorySeed2[2] /** Programare si IT */, name: 'face tema ta la engleza', description: 'my description 2', user: userSeed[0] /** Alex */, pictureGUIDs: [] }
+  { id: 1, category: categorySeed2[2] /** Programare si IT */, name: 'crea o pagina web', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac turpis sed massa sollicitudin feugiat at nec lorem. Curabitur sollicitudin a ligula in euismod. In finibus nisl nunc, at dapibus quam ornare non. Praesent purus orci, ultrices eget magna id, condimentum condimentum mi. Morbi id volutpat ante, at rhoncus urna. Maecenas lacinia at justo eu convallis.', user: userSeed[1] /** Katona */, pictureGUIDs: [], computedRating: 4.5 },
+  { id: 2, category: categorySeed2[2] /** Programare si IT */, name: 'face tema ta la engleza', description: 'Duis faucibus pulvinar neque, at facilisis libero bibendum et. Maecenas ut quam sit amet orci elementum venenatis. Donec a auctor enim, sit amet rhoncus quam. Nam sed arcu eget magna sagittis vestibulum vitae eget libero. Praesent non augue ut nibh vehicula feugiat vitae a sem.', user: userSeed[0] /** Alex */, pictureGUIDs: [] }
 ]
 
 let listedJobPackageSeed: ListedJobPackage[] = [

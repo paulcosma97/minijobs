@@ -46,7 +46,7 @@ export const handleError = (res: Response) => (e: any | MiniJobsError) => {
     });
   }
 
-  logger.error(e.message);
+  console.error(e);
   res.status(500);
   res.json(e);
 };

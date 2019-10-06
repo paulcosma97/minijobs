@@ -95,3 +95,19 @@ body {
   margin: 5px;
   margin-bottom: 50px;
 }
+
+/* Listed Jobs */
+.listed-jobs-list .ant-list-item-action {
+  display: grid;
+  grid-template-columns: 1.5fr 0.75fr 1fr;
+}
+
+.listed-jobs-list .ant-list-item-action li {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.listed-jobs-list .ant-list-item-meta-description {
+  text-align: left;
+  padding-right: 1.5em;
+}

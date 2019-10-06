@@ -3,10 +3,11 @@ import thunk from 'redux-thunk';
 import rootReducer from './reducers';
 import { ProfileState } from './reducers/profile.reducer';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
-import environment from '../../environment.json';
+import { ListedJobsState } from './reducers/listed-jobs.reducer';
 
 export interface State {
   profile?: ProfileState;
+  listedJobs?: ListedJobsState;
 }
 
 const initialState: State = {};

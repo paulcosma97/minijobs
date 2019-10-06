@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { State } from '../../shared/state/store';
 import { ProfileState } from '../../shared/state/reducers/profile.reducer';
 import { logoutProfile } from '../../shared/state/actions/profile.action';
+import environment from '../../environment.json';
+
 
 class ProfilePage extends React.Component<{
   profile: ProfileState;
@@ -28,7 +30,7 @@ class ProfilePage extends React.Component<{
           >
             Deconectare
           </span>
-          <Avatar src={'http://localhost:9000' + this.props.profile.data.picture} alt="User avatar" />
+          <Avatar src={environment.baseUrl + this.props.profile.data.picture} alt="User avatar" />
           <span className="user-full-name">
             {this.props.profile.data.firstName}{' '}
             {this.props.profile.data.lastName}

@@ -19,7 +19,7 @@ export class Job {
   @Column({ nullable: false, length: 1500 })
   description: string;
 
-  @ManyToOne(type => FileGUID, file => file.guid, { eager: true })
+  @OneToMany(type => FileGUID, file => file.job, { eager: true })
   pictureGUIDs: FileGUID[];
 
   @ManyToMany(type => User, user => user.lastViewed)
