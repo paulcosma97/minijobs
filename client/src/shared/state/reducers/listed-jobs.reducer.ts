@@ -1,5 +1,5 @@
-import { ProfileData } from './profile.reducer';
-import { ListedJobsActions, LOAD_LISTED_JOBS } from '../actions/listed-jobs.action';
+import {ProfileData} from '../../../modules/user/state/profile.reducer';
+import {ListedJobsActions, LOAD_LISTED_JOBS} from '../actions/listed-jobs.action';
 
 export interface ListedJob {
   category: {

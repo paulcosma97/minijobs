@@ -1,9 +1,9 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
-import { ProfileState } from './reducers/profile.reducer';
-import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
-import { ListedJobsState } from './reducers/listed-jobs.reducer';
+import {ProfileState} from '../../modules/user/state/profile.reducer';
+import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly';
+import {ListedJobsState} from './reducers/listed-jobs.reducer';
 
 export interface State {
   profile?: ProfileState;

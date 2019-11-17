@@ -1,16 +1,16 @@
 import React from 'react';
-import Navbar from '../../shared/components/navbar/Navbar';
-import { Layout } from 'antd';
-import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
-import LoginPage from '../pages/LoginPage';
-import { connect } from 'react-redux';
-import { loadProfile } from '../../shared/state/actions/profile.action';
-import { State } from '../../shared/state/store';
-import { ProfileState } from '../../shared/state/reducers/profile.reducer';
-import ProfilePage from '../pages/ProfilePage';
-import ListedJobsPage from '../pages/ListedJobsPage';
-import RequiredJobsPage from '../pages/RequiredJobsPage';
-import PrivacyPolicyPage from '../pages/PrivacyPolicyPage';
+import Navbar from '../navbar/Navbar';
+import {Layout} from 'antd';
+import {HashRouter as Router, Redirect, Route} from 'react-router-dom';
+import LoginPage from '../../../modules/user/login/pages/LoginPage';
+import {connect} from 'react-redux';
+import {loadProfile} from '../../../modules/user/state/profile.action';
+import {State} from '../../state/store';
+import {ProfileState} from '../../../modules/user/state/profile.reducer';
+import ProfilePage from '../../../modules/user/profile/pages/ProfilePage';
+import ListedJobsPage from '../../../modules/jobs/listed-jobs/pages/ListedJobsPage';
+import RequiredJobsPage from '../../../modules/jobs/required-jobs/pages/RequiredJobsPage';
+import PrivacyPolicyPage from '../../../modules/user/profile/pages/PrivacyPolicyPage';
 
 class ApplicationRouter extends React.Component<{
   loadProfile: Function;
