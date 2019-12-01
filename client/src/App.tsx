@@ -3,13 +3,15 @@ import './style.css';
 import React from 'react';
 import {Icon} from 'antd';
 import {Provider} from 'react-redux';
-import {store} from './shared/state/store';
+import createStoreWithMiddleware from './shared/state/store';
 import ApplicationRouter from './shared/components/router/ApplicationRouter';
 
 window.addEventListener('beforeinstallprompt', (e: any) => {
   console.log(e);
   e.prompt();
 });
+
+const store = createStoreWithMiddleware();
 
 const OfflineOverlay: React.FC<any> = () => {
   return (

@@ -1,5 +1,5 @@
 import {ProfileData} from '../../../modules/user/state/profile.reducer';
-import {ListedJobsActions, LOAD_LISTED_JOBS} from '../actions/listed-jobs.action';
+import {ListedJobsActions, ListedJobsActionTypes} from '../actions/listed-jobs.action';
 
 export interface ListedJob {
   category: {
@@ -38,13 +38,28 @@ const initialState: ListedJobsState = {
 
 export default function(state = initialState, action: ListedJobsActions) {
   switch (action.type) {
-    case LOAD_LISTED_JOBS: {
+    case ListedJobsActionTypes.LISTED_JOBS_LOAD: {
+      return {
+        ...state,
+        loading: true
+      };
+    }
+
+    case ListedJobsActionTypes.LISTED_JOBS_LOAD_SUCCESS: {
       return {
         ...state,
         data: action.payload,
-        loading: false
+        loading: false,
       };
     }
+
+    case ListedJobsActionTypes.LISTED_JOBS_LOAD_FAILURE: {
+      return {
+        ...state,
+        loading: false,
+      };
+    }
+
     default: {
       return state;
     }

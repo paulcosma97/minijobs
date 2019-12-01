@@ -40,7 +40,7 @@ const JobList: React.FC<JobListArgs> = ({jobs}) => {
                 >
                     <List.Item.Meta
                         avatar={<Avatar src={env.baseUrl + job.user.picture}/>}
-                        title={<a href={''}>{''}</a>}
+                        title={<a href={'http://example.com'}>{''}</a>}
                         description={job.description}
                     />
                     Voi {job.name}

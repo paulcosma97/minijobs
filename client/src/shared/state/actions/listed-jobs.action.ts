@@ -1,23 +1,25 @@
 import { ListedJobPage } from "../reducers/listed-jobs.reducer";
-import { ActionDispatcher } from "./index";
-import smartFetch from "../../utils/smart-fetch";
 
-export const LOAD_LISTED_JOBS = '[Listed Jobs] Load';
-
-interface LoadListedJobsAction {
-  type: typeof LOAD_LISTED_JOBS;
-  payload: ListedJobPage;
+export enum ListedJobsActionTypes {
+  LISTED_JOBS_LOAD = '[Listed Jobs] Load',
+  LISTED_JOBS_LOAD_SUCCESS = '[Listed Jobs] Load Success',
+  LISTED_JOBS_LOAD_FAILURE = '[Listed Jobs] Load Failure',
 }
 
-export const loadListedJobs = (page = 0) => async (dispatch: ActionDispatcher) => {
-  const jobsPage = await smartFetch
-    .get<ListedJobPage>('/listed-job?page=' + page)
-    .catch(() => null);
+export class LoadListedJobs {
+  type: typeof ListedJobsActionTypes.LISTED_JOBS_LOAD = ListedJobsActionTypes.LISTED_JOBS_LOAD;
 
-  dispatch({
-    type: LOAD_LISTED_JOBS,
-    payload: jobsPage
-  });
-};
+  constructor(public payload: { page: number }) { }
+}
 
-export type ListedJobsActions = LoadListedJobsAction;
+export class LoadSuccessListedJobs {
+  type: typeof ListedJobsActionTypes.LISTED_JOBS_LOAD_SUCCESS = ListedJobsActionTypes.LISTED_JOBS_LOAD_SUCCESS;
+  
+  constructor(public payload: ListedJobPage) { }
+}
+
+export class LoadFailureListedJobs {
+  type: typeof ListedJobsActionTypes.LISTED_JOBS_LOAD_FAILURE = ListedJobsActionTypes.LISTED_JOBS_LOAD_FAILURE;
+}
+
+export type ListedJobsActions = LoadListedJobs | LoadSuccessListedJobs | LoadFailureListedJobs;

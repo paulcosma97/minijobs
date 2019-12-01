@@ -1,34 +1,27 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, {useEffect} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
 import {State} from '../../../../shared/state/store';
-import {ListedJobsState} from '../../../../shared/state/reducers/listed-jobs.reducer';
-import {loadListedJobs} from '../../../../shared/state/actions/listed-jobs.action';
 import JobList from '../components/ListedJobList';
+import { LoadListedJobs } from '../../../../shared/state/actions/listed-jobs.action';
 
-export class SmartListedJobList extends Component<{ listedJobs: ListedJobsState, loadListedJobs?: typeof loadListedJobs }> {
+const SmartListedJobList: React.FC = () => {
+    const { data, loading } = useSelector((state: State) => state.listedJobs);
+    const dispatch = useDispatch();
 
-    componentWillMount() {
-        this.props.loadListedJobs();
+    useEffect(() => {
+        dispatch({ ...new LoadListedJobs({ page: 0 }) });
+        // eslint-disable-next-line
+    }, []);
+
+    if (loading) {
+        return <React.Fragment/>
     }
 
-    render() {
-        if (this.props.listedJobs.loading) {
-            return <React.Fragment/>
-        }
-
-        return (
-            <div>
-                <JobList jobs={this.props.listedJobs.data.listedJobs}/>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <JobList jobs={data.listedJobs}/>
+        </div>
+    )
 }
 
-const mapStateToProps = (state: State) => ({
-    listedJobs: state.listedJobs
-});
-const mapDispatchToProps = {
-    loadListedJobs
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SmartListedJobList as any)
+export default SmartListedJobList;

@@ -1,4 +1,4 @@
-import {LOAD_PROFILE, LOAD_PROFILE_SUCCESS, LOGOUT_PROFILE, ProfileActions} from './profile.action';
+import {ProfileActions, ProfileActionTypes} from './profile.action';
 
 export interface ProfileState {
     loading: boolean;
@@ -20,14 +20,14 @@ const initialState: ProfileState = {
 
 export default function (state = initialState, action: ProfileActions) {
     switch (action.type) {
-        case LOAD_PROFILE: {
+        case ProfileActionTypes.LOAD_PROFILE: {
             return {
                 ...state,
                 loading: true
             };
         }
 
-        case LOAD_PROFILE_SUCCESS: {
+        case ProfileActionTypes.LOAD_PROFILE_SUCCESS: {
             return {
                 ...state,
                 data: action.payload,
@@ -35,10 +35,56 @@ export default function (state = initialState, action: ProfileActions) {
             }
         }
 
-        case LOGOUT_PROFILE: {
+        case ProfileActionTypes.LOAD_PROFILE_FAILURE: {
+            return {
+                ...state,
+                loading: false
+            }
+        }
+
+
+
+        case ProfileActionTypes.LOGIN_PROFILE: {
+            return {
+                ...state,
+                loading: true
+            };
+        }
+
+        case ProfileActionTypes.LOGIN_PROFILE_SUCCESS: {
+            return {
+                ...state,
+                loading: false
+            }
+        }
+
+        case ProfileActionTypes.LOGIN_PROFILE_FAILURE: {
+            return {
+                ...state,
+                loading: false
+            }
+        }
+
+
+
+        case ProfileActionTypes.LOGOUT_PROFILE: {
+            return {
+                ...state,
+                loading: true
+            };
+        }
+
+        case ProfileActionTypes.LOGOUT_PROFILE_SUCCESS: {
             return {
                 ...state,
                 data: null,
+                loading: false
+            };
+        }
+
+        case ProfileActionTypes.LOGOUT_PROFILE_FAILURE: {
+            return {
+                ...state,
                 loading: false
             };
         }

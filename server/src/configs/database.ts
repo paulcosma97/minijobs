@@ -14,7 +14,7 @@ export async function makeConnection() {
         password: env.database.password,
         entities: [
             path.join(__dirname, '../models/*.model.ts')
-        ]
+        ],
     }
     
     return createConnection(connectionOptions)

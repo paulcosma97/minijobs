@@ -28,7 +28,8 @@ interface Environment {
         s3: {
             bucket: {
                 name: string,
-                url: string
+                url: string,
+                userStorageUrl: string
             }
         }
     }

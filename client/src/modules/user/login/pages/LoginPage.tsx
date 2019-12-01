@@ -1,10 +1,9 @@
 import React from 'react';
 import {Redirect} from 'react-router';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {State} from '../../../../shared/state/store';
-import {ProfileState} from '../../state/profile.reducer';
 import {FacebookProvider, Login} from 'react-facebook';
-import {loginProfile} from '../../state/profile.action';
+import {LoginProfile} from '../../state/profile.action';
 import {Button, Col, Row} from 'antd';
 import {FacebookAuthResponse} from '../../../../shared/auth/facebook/facebook.types';
 import environment from '../../../../environment.json';
@@ -58,35 +57,27 @@ const FacebookLogin: React.FC<{
     );
 };
 
-class LoginPage extends React.Component<{
-    loginProfile: typeof loginProfile;
-    profile: ProfileState;
-}> {
-    render() {
-        if (this.props.profile.loading) {
-            return <React.Fragment/>;
-        }
+const LoginPage: React.FC = () => {
+    const { loading, data } = useSelector((state: State) => state.profile);
+    const dispatch = useDispatch();
 
-        if (this.props.profile.data) {
-            return <Redirect to="/profile"/>;
-        }
-
-        return (
-            <React.Fragment>
-                <FacebookLogin
-                    appId={environment.facebookAppId}
-                    scope="email"
-                    onError={e => console.error(e)}
-                    onCompleted={result => this.props.loginProfile(result)}
-                />
-            </React.Fragment>
-        );
+    if (loading) {
+        return <React.Fragment/>;
     }
+
+    if (data) {
+        return <Redirect to="/profile"/>;
+    }
+
+    return (
+        <FacebookLogin
+            appId={environment.facebookAppId}
+            scope="email"
+            onError={e => console.error(e)}
+            onCompleted={result => dispatch({ ...new LoginProfile(result) })}
+        />
+    );
 }
 
-export default connect(
-    (state: State) => ({
-        profile: state.profile
-    }),
-    {loginProfile}
-)(LoginPage as any);
+
+export default LoginPage;

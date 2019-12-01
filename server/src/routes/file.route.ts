@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { restrictAccess, AuthenticatedState } from "../services/auth.service";
-import { UserPermissionMask } from "../utils/permissions";
 import * as fileService from '../services/file.service';
 import { handleError } from "../utils/error-handler";
 

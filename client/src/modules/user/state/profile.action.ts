@@ -1,67 +1,71 @@
-import smartFetch from '../../../shared/utils/smart-fetch';
 import {ProfileData} from './profile.reducer';
-import {ActionDispatcher} from '../../../shared/state/actions';
 import {FacebookAuthResponse} from '../../../shared/auth/facebook/facebook.types';
 
-export const LOAD_PROFILE = '[Profile] Load';
-export const LOAD_PROFILE_SUCCESS = '[Profile] Load Success';
-export const LOGIN_PROFILE = '[Profile] Login';
-export const LOGOUT_PROFILE = '[Profile] Logout';
+export enum ProfileActionTypes {
+    LOAD_PROFILE = '[Profile] Load',
+    LOAD_PROFILE_SUCCESS = '[Profile] Load Success',
+    LOAD_PROFILE_FAILURE = '[Profile] Load Failure',
 
-interface LoadProfileAction {
-    type: typeof LOAD_PROFILE;
+    LOGIN_PROFILE = '[Profile] Login',
+    LOGIN_PROFILE_SUCCESS = '[Profile] Login Success',
+    LOGIN_PROFILE_FAILURE = '[Profile] Login Failure',
+
+    LOGOUT_PROFILE = '[Profile] Logout',
+    LOGOUT_PROFILE_SUCCESS = '[Profile] Logout Success',
+    LOGOUT_PROFILE_FAILURE = '[Profile] Logout Failure',
 }
 
-interface LoadSuccessProfileAction {
-    type: typeof LOAD_PROFILE_SUCCESS;
-    payload: ProfileData;
+export class LoadProfile {
+    type: typeof ProfileActionTypes.LOAD_PROFILE = ProfileActionTypes.LOAD_PROFILE;
 }
 
-interface LoginProfileAction {
-    type: typeof LOGIN_PROFILE;
-    payload: ProfileData;
+export class LoadProfileSuccess {
+    type: typeof ProfileActionTypes.LOAD_PROFILE_SUCCESS = ProfileActionTypes.LOAD_PROFILE_SUCCESS;
+
+    constructor (public payload: ProfileData) {}
 }
 
-interface LogoutProfileAction {
-    type: typeof LOGOUT_PROFILE;
+export class LoadProfileFailure {
+    type: typeof ProfileActionTypes.LOAD_PROFILE_FAILURE = ProfileActionTypes.LOAD_PROFILE_FAILURE;
 }
 
-export const loadProfile = () => async (dispatch: ActionDispatcher) => {
-    dispatch({
-        type: LOAD_PROFILE,
-    });
 
-    const profile = await smartFetch
-        .get<ProfileData>('/profile')
-        .catch(() => null);
 
-    dispatch({
-        type: LOAD_PROFILE_SUCCESS,
-        payload: profile
-    });
-};
+export class LoginProfile {
+    type: typeof ProfileActionTypes.LOGIN_PROFILE = ProfileActionTypes.LOGIN_PROFILE;
 
-export const loginProfile = (fbResponse: FacebookAuthResponse) => (
-    dispatch: ActionDispatcher
-) => {
-    smartFetch
-        .post('/auth', {accessToken: fbResponse.tokenDetail.accessToken})
-        .then(() => dispatch(loadProfile()));
-};
+    constructor(public payload: FacebookAuthResponse) {}
+}
 
-export const logoutProfile = () => (dispatch: ActionDispatcher) => {
-    smartFetch
-        .post('/logout')
-        .catch(() => null)
-        .then(() =>
-            dispatch({
-                type: LOGOUT_PROFILE
-            })
-        );
-};
+export class LoginProfileSuccess {
+    type: typeof ProfileActionTypes.LOGIN_PROFILE_SUCCESS = ProfileActionTypes.LOGIN_PROFILE_SUCCESS;
+}
+
+export class LoginProfileFailure {
+    type: typeof ProfileActionTypes.LOGIN_PROFILE_FAILURE = ProfileActionTypes.LOGIN_PROFILE_FAILURE;
+}
+
+
+
+export class LogoutProfile {
+    type: typeof ProfileActionTypes.LOGOUT_PROFILE = ProfileActionTypes.LOGOUT_PROFILE;
+}
+
+export class LogoutProfileSuccess {
+    type: typeof ProfileActionTypes.LOGOUT_PROFILE_SUCCESS = ProfileActionTypes.LOGOUT_PROFILE_SUCCESS;
+}
+
+export class LogoutProfileFailure {
+    type: typeof ProfileActionTypes.LOGOUT_PROFILE_FAILURE = ProfileActionTypes.LOGOUT_PROFILE_FAILURE;
+}
 
 export type ProfileActions =
-    | LoadProfileAction
-    | LoadSuccessProfileAction
-    | LoginProfileAction
-    | LogoutProfileAction;
+    | LoadProfileSuccess
+    | LoadProfile
+    | LoadProfileFailure
+    | LoginProfile
+    | LoginProfileFailure
+    | LoginProfileSuccess
+    | LogoutProfile
+    | LogoutProfileFailure
+    | LogoutProfileSuccess;

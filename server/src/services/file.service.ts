@@ -32,7 +32,7 @@ async function getFileByGuidOrEntity(file: string | File): Promise<File> {
 
 export async function getFileLink(file: string | File): Promise<string> {
   const found = await getFileByGuidOrEntity(file);
-  return env.aws.s3.bucket.url + '/' + found.path;
+  return env.aws.s3.bucket.userStorageUrl + '/' + found.path;
 }
 
 export async function getServedFileLink(file: string | File): Promise<string> {
