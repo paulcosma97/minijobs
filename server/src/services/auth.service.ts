@@ -8,7 +8,6 @@ import { UserPermissionMask, hasPermissions, computeAdminPermissionMask } from '
 import axios from "axios";
 import FacebookProfile from '../dtos/facebook-profile.dto';
 import { uploadFile } from './file.service';
-import { UserDTO } from '../dtos/user.dto'
 
 export enum AuthenticatedState {
     AUTHENTICATED,
@@ -31,25 +30,14 @@ export interface JWTToken {
 export const JWTCookieName = 'access-token';
 export const JWTCookieMaxAge = 1000 * 60 * 60 * 24 * 14; // 14 days
 
-/**
- * Middleware function to restrict access.
- * 
- * Defaults to allow any auth state and role USER
- */
-export const restrictAccess: OnlyAllowRequestHandler = (args: OnlyAllowRequestHandlerArgs) => {
-    args.authenticated = args.authenticated === undefined ? AuthenticatedState.ANY : args.authenticated;
-    args.permissions = !args.permissions ? [] : args.permissions;
-
+export const resolveContext = () => {
     return (req, res, next) => (async () => {
+
         const token: string = req.cookies[JWTCookieName];
 
         // If token doesn't exist, go to next handler only if is permitted
         if (!token) {
-            if (args.authenticated === AuthenticatedState.ANY || args.authenticated === AuthenticatedState.ANONYMOUS) {
-                return next();
-            }
-
-            throw new UnauthorizedError();
+            return next();
         }
 
         const [ tokenPayload, error ] = await decodeToken<JWTToken>(token);
@@ -57,7 +45,7 @@ export const restrictAccess: OnlyAllowRequestHandler = (args: OnlyAllowRequestHa
         // If token has been altered, clear cookie and exit
         if (error) {
             res.clearCookie(JWTCookieName);
-            throw new UnauthorizedError();
+            throw new UnauthorizedError('Could not decode token.');
         }
 
         // Update cookie if older than half of lifespan
@@ -70,11 +58,47 @@ export const restrictAccess: OnlyAllowRequestHandler = (args: OnlyAllowRequestHa
         const repository = await getRepository(User);
         const user = await repository.findOne({ where: { email: tokenPayload.email } });
 
+        if (!user) {
+            res.clearCookie(JWTCookieName);
+            throw new UnauthorizedError(`User '${tokenPayload.email}' could not be found.`);
+        }
+
+        res.locals = {
+            user
+        };
+
+        next();
+    })().catch(handleError(res));
+}
+
+/**
+ * Middleware function to restrict access.
+ * 
+ * Defaults to allow any auth state and role USER
+ */
+export const restrictAccess: OnlyAllowRequestHandler = (args: OnlyAllowRequestHandlerArgs) => {
+    args.authenticated = args.authenticated === undefined ? AuthenticatedState.ANY : args.authenticated;
+    args.permissions = !args.permissions ? [] : args.permissions;
+
+    return (_, res, next) => (async () => {
+        const user = res.locals.user
+
+        if (args.authenticated === AuthenticatedState.ANONYMOUS) {
+            if (user) {
+                throw new ForbiddenError();
+            }
+        }
+
+        if (args.authenticated === AuthenticatedState.AUTHENTICATED) {
+            if (!user) {
+                throw new UnauthorizedError();
+            }
+        }
+
         if (!hasPermissions(user, args.permissions)) {
             throw new ForbiddenError();
         }
 
-        res.locals.user = user;
         next();
     })().catch(handleError(res));
 }
@@ -110,8 +134,6 @@ async function createOrUpdateUser(profile: FacebookProfile): Promise<User> {
     let found = await repository.findOne({
         where: { email: profile.email }
     });
-
-
 
     if (!found) {
         const file = await uploadFile(profile.picture.data.url, `user/${profile.email}/profile-picture`);

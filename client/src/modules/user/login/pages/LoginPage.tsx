@@ -1,13 +1,13 @@
 import React from 'react';
-import {Redirect} from 'react-router';
-import {useSelector, useDispatch} from 'react-redux';
-import {State} from '../../../../shared/state/store';
-import {FacebookProvider, Login} from 'react-facebook';
-import {LoginProfile} from '../../state/profile.action';
-import {Button, Col, Row} from 'antd';
-import {FacebookAuthResponse} from '../../../../shared/auth/facebook/facebook.types';
+import { Redirect } from 'react-router';
+import { useSelector, useDispatch } from 'react-redux';
+import { State } from '../../../../shared/state/store';
+import { FacebookProvider, Login } from 'react-facebook';
+import { LoginProfile, LoginProfileFailure } from '../../state/profile.action';
+import { Button, Col, Row } from 'antd';
+import { FacebookAuthResponse } from '../../../../shared/auth/facebook/facebook.types';
 import environment from '../../../../environment.json';
-
+import PageLoader from '../../../../shared/components/page-loader/PageLoader';
 const FacebookLogin: React.FC<{
     appId: string;
     scope: string;
@@ -21,21 +21,21 @@ const FacebookLogin: React.FC<{
                 onCompleted={props.onCompleted}
                 onError={props.onError}
             >
-                {({loading, handleClick, error, data}) => (
+                {({ loading, handleClick, error, data }) => (
                     <span onClick={handleClick}>
-            {!loading && (
-                <Row>
-                    <Col span={16} offset={4}>
-                        <Button
-                            icon="facebook"
-                            color="primary"
-                            style={{width: '100%'}}
-                        >
-                            Autentifica-te cu Facebook
+                        {!loading && (
+                            <Row>
+                                <Col span={16} offset={4}>
+                                    <Button
+                                        icon="facebook"
+                                        color="primary"
+                                        style={{ width: '100%' }}
+                                    >
+                                        Autentifica-te cu Facebook
                         </Button>
-                    </Col>
-                </Row>
-            )}
+                                </Col>
+                            </Row>
+                        )}
                         {loading && (
                             <Row>
                                 <Col span={16} offset={4}>
@@ -43,14 +43,14 @@ const FacebookLogin: React.FC<{
                                         loading={true}
                                         color="primary"
                                         icon="facebook"
-                                        style={{width: '100%'}}
+                                        style={{ width: '100%' }}
                                     >
                                         Verificam profilul...
                                     </Button>
                                 </Col>
                             </Row>
                         )}
-          </span>
+                    </span>
                 )}
             </Login>
         </FacebookProvider>
@@ -62,18 +62,18 @@ const LoginPage: React.FC = () => {
     const dispatch = useDispatch();
 
     if (loading) {
-        return <React.Fragment/>;
+        return <PageLoader />;
     }
 
     if (data) {
-        return <Redirect to="/profile"/>;
+        return <Redirect to="/profile" />;
     }
 
     return (
         <FacebookLogin
             appId={environment.facebookAppId}
             scope="email"
-            onError={e => console.error(e)}
+            onError={() => dispatch({ ...new LoginProfileFailure() })}
             onCompleted={result => dispatch({ ...new LoginProfile(result) })}
         />
     );

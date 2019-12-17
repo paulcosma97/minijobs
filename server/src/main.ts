@@ -7,6 +7,7 @@ import logger from "./services/logger.service";
 import routes from "./routes/routes";
 import env from "./configs/env";
 import { seedDatabase } from "./dev/default.seed";
+import { resolveContext } from "./services/auth.service";
 
 const { app, server } = makeServer();
 
@@ -18,6 +19,7 @@ app.use(
     origin: (_, callback) => callback(null, true)
   })
 );
+app.use(resolveContext());
 
 routes.forEach(route => app.use(route));
 

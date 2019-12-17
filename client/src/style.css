@@ -1,8 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
 :root {
   --color-foreground-primary: rgb(247, 247, 247);
   --color-background-primary: rgb(240, 240, 240) ;
 
   --color-primary: #df18a0;
+}
+
+*, html {
+  font-family: 'Roboto', sans-serif;
 }
 
 .ant-layout,
@@ -97,17 +103,8 @@ body {
 }
 
 /* Listed Jobs */
-.listed-jobs-list .ant-list-item-action {
+.price-list {
   display: grid;
-  grid-template-columns: 1.5fr 0.75fr 1fr;
-}
-
-.listed-jobs-list .ant-list-item-action li {
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.listed-jobs-list .ant-list-item-meta-description {
-  text-align: left;
-  padding-right: 1.5em;
+  grid-template-columns: 1.3fr 0.75fr 1fr;
+  text-align: center;
 }

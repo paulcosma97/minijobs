@@ -17,7 +17,6 @@ const ApplicationRouter: React.FC = () => {
 
   useEffect(() => {
     dispatch({ ...new LoadProfile() });
-    // eslint-disable-next-line
   }, []);
 
   return (
