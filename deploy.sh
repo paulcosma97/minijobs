@@ -1,6 +1,9 @@
 git clean -d -x -f
 git pull
 
+export MJ_PROD=true
+export MJ_PORT=443
+
 # Build client
 cd ./client
 npm install
@@ -16,9 +19,6 @@ cd ../server
 npm i
 npx prockill -p 443 -k
 npx wait-port 50500 # waits for db
-
-export MJ_PROD=true
-export MJ_PORT=443
 
 npm start
 
