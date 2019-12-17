@@ -26,4 +26,4 @@ makeConnection()
   .then(async () => { env.production || await seedDatabase() })
   .catch(e => (logger.error(e.message), process.exit(-1)));
 
-server.listen(9000, () => logger.info("MiniJobs API started on port 9000"));
+server.listen(env.port, () => logger.info(`MiniJobs API started on port ${env.port}`));
