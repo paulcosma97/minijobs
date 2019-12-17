@@ -24,8 +24,8 @@ const Environment = {
     production: getEnv('MJ_PROD', false),
     port: getEnv('MJ_PORT', 9000),
     ssl: {
-        certificate: getEnv('MJ_SSL_CERTIFICATE', 'etc/letsencrypt/live/mini-jobs-api.paulcsoft.com/fullchain.pem'),
-        key: getEnv('MJ_SSL_KEY', 'etc/letsencrypt/live/mini-jobs-api.paulcsoft.com/privkey.pem')
+        certificate: getEnv('MJ_SSL_CERTIFICATE', '/etc/letsencrypt/live/mini-jobs-api.paulcsoft.com/fullchain.pem'),
+        key: getEnv('MJ_SSL_KEY', '/etc/letsencrypt/live/mini-jobs-api.paulcsoft.com/privkey.pem')
     },
     database: {
         type: "mysql",
