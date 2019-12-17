@@ -1,3 +1,6 @@
+git clean -d -x -f
+git pull
+
 # Build client
 cd ./client
 npm install
