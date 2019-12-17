@@ -21,11 +21,11 @@ app.use(
 );
 app.use(resolveContext());
 
-routes.forEach(route => app.use(route));
+routes.forEach(route => app.use('/api', route));
 
 makeConnection()
   .then(() => logger.info(`Database connection established`))
   .then(async () => { env.production || await seedDatabase() })
   .catch(e => (logger.error(e.message), process.exit(-1)));
 
-server.listen(9000, () => logger.info("MiniJobs API started on port 9000"));
+server.listen(env.port, () => logger.info(`MiniJobs API started on port ${env.port}`));
