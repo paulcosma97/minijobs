@@ -17,19 +17,26 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: docker test
+    - name: Environment Variables
+      run: env
+    - name: Print Working Directory
+      run: pwd
+    - name: Print Files
+      run: ls -al
+    - name: Print User
+      run: whoami
+    - name: Start Docker containers
       run: |
-        ls -la
-        cd server/docker
+        cd ./docker
         docker-compose up -d
         cd ..
-        npm i
-        npx wait-port 50500
-        npm start
-    - name: npm install, build, and test
+    - name: Install server dependencies
       run: |
-        npm ci
-        npm run build --if-present
-        npm test
+        cd ./server
+        npm i
+    - name: Wait for database
+      run: npx wait-port 50500
+    - name: Test server
+      run: npm run test
       env:
         CI: true
