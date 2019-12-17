@@ -22,8 +22,9 @@ jobs:
         ls -la
         cd server/docker
         docker-compose up -d
-        npx wait-port 50500
         cd ..
+        npm i
+        npx wait-port 50500
         npm start
     - name: npm install, build, and test
       run: |
