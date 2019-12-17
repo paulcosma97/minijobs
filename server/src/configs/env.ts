@@ -10,7 +10,7 @@ function getEnv<T = any>(name: string, defaultValue?: T): T {
     }
 
     switch(typeof defaultValue) {
-        case 'boolean': return !!val as any as T;
+        case 'boolean': return (val == 'true' || val == '1') as any as T;
         case 'number': return +val as any as T;
         case 'string': return val + '' as any as T;
         default: {

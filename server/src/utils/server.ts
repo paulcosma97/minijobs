@@ -3,6 +3,8 @@ import fs from 'fs';
 import express from 'express';
 import env from '../configs/env';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import logger from '../services/logger.service';
 
 export const makeServer = () => {
   const app = express();
@@ -12,6 +14,10 @@ export const makeServer = () => {
   if (!env.production) {
     return {app, server: app};
   }
+
+  logger.info('Proceeding in PRODUCTION mode.');
+
+  app.use('/', express.static(path.join(__dirname, '../../../client/build')));
 
   const options: ServerOptions = {
     key: fs.readFileSync(env.ssl.key, 'utf8'),

@@ -19,7 +19,7 @@ app.use(
   })
 );
 
-routes.forEach(route => app.use(route));
+routes.forEach(route => app.use('/api', route));
 
 makeConnection()
   .then(() => logger.info(`Database connection established`))
