@@ -5,7 +5,7 @@ function smartFetchRaw<T = any>(
   body?: any,
   options: RequestInit = {}
 ): Promise<T> {
-  return fetch(environment.baseUrl + url, {
+  return fetch((process.env.MJ_PROD ? environment.productionBaseUrl : environment.baseUrl) + url, {
     headers: {
       'Content-Type': 'application/json'
     },
@@ -48,6 +48,6 @@ for (const method of ['get', 'post', 'delete', 'put']) {
 
 export default smartFetch;
 
-if (!environment.production) {
+if (!process.env.MJ_PROD) {
   (window as any).smartFetch = smartFetch;
 }
