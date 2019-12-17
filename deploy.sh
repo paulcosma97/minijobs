@@ -1,3 +1,5 @@
+cd /root/minijobs
+
 git clean -d -x -f
 git pull
 
