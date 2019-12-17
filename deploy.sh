@@ -20,5 +20,5 @@ npm i
 npx prockill -p 443 -k
 npx wait-port 50500 # waits for db
 
-npm start
-
+nohup npm start &
+exit 0
