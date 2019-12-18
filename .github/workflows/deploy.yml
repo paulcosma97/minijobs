@@ -9,8 +9,8 @@ jobs:
   build:
     name: Running deploy.sh
     runs-on: ubuntu-latest
-    steps: Running deploy.sh
-    - name: 
+    steps:
+    - name: Running deploy.sh 
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
