@@ -24,8 +24,8 @@ docker-compose up -d
 # Build & run server
 cd ../server
 npm i
-npx prockill -p 443 -k
 npx wait-port 50500 # waits for db
+npx prockill -p 443 -k
 
 nohup npm run start:prod > "../../logs/server-$(date "+%Y-%m-%dT%H:%M:%S").log"
 npx wait-port -t 30000 443
