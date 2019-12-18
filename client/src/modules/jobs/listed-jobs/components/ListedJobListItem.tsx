@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { ListedJob } from '../../../../shared/state/reducers/listed-jobs.reducer'
-import env from '../../../../environment.json';
+import env from '../../../../shared/environment';
 import './item.css'
 import { Avatar, Icon } from 'antd';
 
