@@ -1,7 +1,7 @@
 import React from 'react'
 import {Avatar, Icon, List} from 'antd';
 import {ListedJob} from '../../../../shared/state/reducers/listed-jobs.reducer';
-import env from '../../../../environment.json';
+import env from '../../../../shared/environment';
 
 type JobListArgs = {
     jobs: ListedJob[];
