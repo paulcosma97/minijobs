@@ -5,7 +5,6 @@ cd /root/minijobs
 if [ "$1" != "--phase-2" ]; then
     git reset --hard
     git pull
-    chmod u+x /root/minijobs/deploy.sh
     bash ./deploy.sh --phase-2
     exit $?
 fi
