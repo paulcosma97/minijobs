@@ -27,6 +27,6 @@ npm i
 npx prockill -p 443 -k
 npx wait-port 50500 # waits for db
 
-nohup npm start > "../../logs/server-$(date "+%Y-%m-%dT%H:%M:%S").log"
+nohup npm run start:prod > "../../logs/server-$(date "+%Y-%m-%dT%H:%M:%S").log"
 npx wait-port -t 30000 443
 exit 0

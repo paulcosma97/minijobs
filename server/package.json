@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --inspect -r ts-node/register ./src/main.ts",
+    "start:prod": "node -r ts-node/register ./src/main.ts",
     "start:watch": "nodemon"
   },
   "author": "",
