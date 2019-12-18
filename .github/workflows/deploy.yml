@@ -9,7 +9,7 @@ jobs:
   build:
     name: Running deploy.sh
     runs-on: ubuntu-latest
-    steps:
+    steps: Running deploy.sh
     - name: 
       uses: appleboy/ssh-action@master
       with:
@@ -18,4 +18,4 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
         script_stop: true
-        script: bash /root/minijobs/deploy.sh
+        script: chmod u+x /root/minijobs/deploy.sh && /root/minijobs/deploy.sh
