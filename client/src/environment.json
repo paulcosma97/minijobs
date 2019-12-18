@@ -1,5 +1,0 @@
-{
-    "baseUrl": "http://localhost:9000/api",
-    "productionBaseUrl": "/api",
-    "facebookAppId": "480859139369996"
-}

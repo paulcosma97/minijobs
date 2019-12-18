@@ -1,6 +1,6 @@
 import React from "react";
 import {Avatar, Layout, Menu} from "antd";
-import environment from "../../../../environment.json";
+import environment from "../../../../shared/environment";
 import {Link} from "react-router-dom";
 import {ProfileData} from "../../state/profile.reducer";
 

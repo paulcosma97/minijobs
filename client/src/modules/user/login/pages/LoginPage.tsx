@@ -6,7 +6,7 @@ import { FacebookProvider, Login } from 'react-facebook';
 import { LoginProfile, LoginProfileFailure } from '../../state/profile.action';
 import { Button, Col, Row } from 'antd';
 import { FacebookAuthResponse } from '../../../../shared/auth/facebook/facebook.types';
-import environment from '../../../../environment.json';
+import environment from '../../../../shared/environment';
 import PageLoader from '../../../../shared/components/page-loader/PageLoader';
 const FacebookLogin: React.FC<{
     appId: string;

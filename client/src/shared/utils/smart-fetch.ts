@@ -1,11 +1,11 @@
-import environment from '../../environment.json';
+import environment from '../environment';
 
 function smartFetchRaw<T = any>(
   url: string,
   body?: any,
   options: RequestInit = {}
 ): Promise<T> {
-  return fetch((process.env.NODE_ENV === 'production' ? environment.productionBaseUrl : environment.baseUrl) + url, {
+  return fetch(environment.baseUrl + url, {
     headers: {
       'Content-Type': 'application/json'
     },
@@ -48,6 +48,6 @@ for (const method of ['get', 'post', 'delete', 'put']) {
 
 export default smartFetch;
 
-if (process.env.NODE_ENV !== 'production') {
+if (environment.production) {
   (window as any).smartFetch = smartFetch;
 }
