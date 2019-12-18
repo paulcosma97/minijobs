@@ -18,4 +18,4 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
         script_stop: true
-        script: chmod u+x /root/minijobs/deploy.sh && /root/minijobs/deploy.sh
+        script: /root/minijobs/deploy.sh
