@@ -1,6 +1,6 @@
 cd /root/minijobs
 
-git clean -d -x -f
+# git clean -d -x -f
 git pull
 
 export MJ_PROD=true
@@ -22,5 +22,5 @@ npm i
 npx prockill -p 443 -k
 npx wait-port 50500 # waits for db
 
-nohup npm start &
+nohup npm start > "../logs/server-$(date "+%Y-%m-%dT%H:%M:%S").log"
 exit 0
