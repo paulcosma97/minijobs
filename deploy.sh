@@ -27,6 +27,6 @@ npm i
 npx wait-port 50500 # waits for db
 kill -9 `sudo lsof -t -i:443`
 
-nohup npm run start:prod > "../../logs/server-$(date "+%Y-%m-%dT%H:%M:%S").log"
+nohup npm run start:prod > "../../logs/server-$(date "+%Y-%m-%dT%H:%M:%S").log" &
 npx wait-port -t 30000 443
 exit 0
