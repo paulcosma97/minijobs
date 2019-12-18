@@ -5,7 +5,7 @@ cd /root/minijobs
 if [ "$1" != "--phase-2" ]; then
     git pull
     bash ./deploy.sh --phase-2
-    exit 0
+    exit $?
 fi
 
 export MJ_PROD=true
