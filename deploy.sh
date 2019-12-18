@@ -3,7 +3,7 @@
 cd /root/minijobs
 
 if [ "$1" != "--phase-2" ]; then
-    git checkout -- deploy.sh
+    git reset --hard
     git pull
     bash ./deploy.sh --phase-2
     exit $?
