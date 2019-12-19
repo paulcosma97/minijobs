@@ -58,15 +58,11 @@ const FacebookLogin: React.FC<{
 };
 
 const LoginPage: React.FC = () => {
-    const { loading, data } = useSelector((state: State) => state.profile);
+    const { loading } = useSelector((state: State) => state.profile);
     const dispatch = useDispatch();
 
     if (loading) {
         return <PageLoader />;
-    }
-
-    if (data) {
-        return <Redirect to="/profile" />;
     }
 
     return (

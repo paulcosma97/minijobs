@@ -1,47 +1,75 @@
 import React, { useEffect } from 'react';
 import Navbar from '../navbar/Navbar';
-import {Layout} from 'antd';
-import {HashRouter as Router, Redirect, Route} from 'react-router-dom';
+import { Layout } from 'antd';
+import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import LoginPage from '../../../modules/user/login/pages/LoginPage';
-import {useSelector, useDispatch} from 'react-redux';
-import {LoadProfile} from '../../../modules/user/state/profile.action';
-import {State} from '../../state/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { LoadProfile } from '../../../modules/user/state/profile.action';
+import { State } from '../../state/store';
 import ProfilePage from '../../../modules/user/profile/pages/ProfilePage';
 import ListedJobsPage from '../../../modules/jobs/listed-jobs/pages/ListedJobsPage';
 import RequiredJobsPage from '../../../modules/jobs/required-jobs/pages/RequiredJobsPage';
 import PrivacyPolicyPage from '../../../modules/user/profile/pages/PrivacyPolicyPage';
+import PageLoader from '../page-loader/PageLoader';
 
 const ApplicationRouter: React.FC = () => {
-  const { loading, data } = useSelector((state: State) => state.profile);
+  const { loading, data: profileState } = useSelector((state: State) => state.profile);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch({ ...new LoadProfile() });
   }, []);
 
+  if (loading) {
+    return <PageLoader />
+  }
+
   return (
-    <React.Fragment>
-      <Router>
-        <Layout>
-          <Layout.Content>
-            {!loading && !data ? (
-              <Redirect to="/login" />
-            ) : (
-              <React.Fragment>
-                <Route path="/profile" component={ProfilePage} />
-                <Route path="/listed-jobs" component={ListedJobsPage} />
-                <Route path="/required-jobs" component={RequiredJobsPage} />
-                <Route path="/privacy-policy" component={PrivacyPolicyPage} />
-              </React.Fragment>
-            )}
-            <Route path="/login" component={LoginPage} />
+    <Router>
+      <Layout>
+        <Layout.Content>
+          {profileState ? (
+            <>
+              <Switch>
+                <Route path="/profile">
+                  <ProfilePage />
+                </Route>
 
-            {window.location.href.endsWith('/profile') && (
-              <Redirect to="/profile" />
-            )}
-          </Layout.Content>
-        </Layout>
+                <Route path="/listed-jobs" >
+                  <ListedJobsPage />
+                </Route>
 
+                <Route path="/required-jobs" >
+                  <RequiredJobsPage />
+                </Route>
+
+                <Route path="/privacy-policy" >
+                  <PrivacyPolicyPage />
+                </Route>
+
+                <Route path="*">
+                  <Redirect to="/profile" />
+                </Route>
+              </Switch>
+            </>
+          ) : (
+              <>
+                <Switch>
+                  <Route path="/login">
+                    <LoginPage />
+                  </Route>
+
+                  <Route path="*">
+                    <Redirect to="/login" />
+                  </Route>
+                </Switch>
+              </>
+            )}
+
+        </Layout.Content>
+      </Layout>
+
+      {profileState && (
         <Navbar
           items={[
             { icon: 'search', link: '/listed-jobs', key: 'listed-jobs' },
@@ -49,8 +77,9 @@ const ApplicationRouter: React.FC = () => {
             { icon: 'menu', link: '/profile', key: 'profile' }
           ]}
         />
-      </Router>
-    </React.Fragment>
+      )}
+
+    </Router>
   );
 }
 
