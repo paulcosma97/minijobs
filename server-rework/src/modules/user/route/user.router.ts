@@ -1,9 +1,18 @@
 import { Service } from "typedi";
-import ExpressRouter from "../../../shared/module/express.router";
+import GraphQLRouter from "../../../shared/module/graphql.router";
+import { gql } from 'apollo-server-lambda';
 
 @Service()
-export class UserRouter extends ExpressRouter {
-    getUser = this.registerRoute('get', '/greet', (req, res) => {
-        res.json({ test: 'test' });
-    })
+export class UserRouter implements GraphQLRouter {
+    typeDefs = gql`
+        type Query {
+            greet: String
+        }
+    `;
+
+    resolvers = {
+        Query: {
+            greet: () => "Hello World!"
+        }
+    };
 }

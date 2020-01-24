@@ -1,11 +1,14 @@
 import Container from "typedi";
-import * as express from 'express';
 import CompositeModule from "./module/composite-module";
 import Module from "./module/module.interface";
-import ExpressRouter from "./module/express.router";
+import GraphQLRouter from "./module/graphql.router";
+import { DocumentNode } from "graphql";
+import { IResolvers } from "apollo-server-lambda";
+
+const isGraphQLRouter = instance => instance.resolvers && instance.typeDefs ;
 
 export default class AppModule {
-    private app = express();
+    private gqlDefinitions: { typeDefs: DocumentNode; resolvers: IResolvers }[] = [];
 
     constructor(private modules: Module[]) {}
 
@@ -15,11 +18,14 @@ export default class AppModule {
 
         declarations
             .map(declaration => Container.get(declaration))
-            .filter(instance => instance instanceof ExpressRouter)
-            .forEach((router: ExpressRouter) => this.app.use(router.getRoutes()))
+            .filter(isGraphQLRouter)
+            .forEach((router: GraphQLRouter) => {
+                console.info(`Found GraphQL router ${router.constructor.name}.`);
+                this.gqlDefinitions.push({ resolvers: router.resolvers, typeDefs: router.typeDefs })
+            })
     }
 
-    get expressApp() {
-        return this.app;
+    get graphQLDefinitions() {
+        return this.gqlDefinitions;
     }
 }

@@ -14,15 +14,18 @@
     "@types/aws-lambda": "^8.10.40",
     "@types/aws-serverless-express": "^3.3.3",
     "@types/node": "^13.5.0",
+    "apollo-server-express": "^2.9.16",
     "aws-sdk": "^2.609.0",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   },
   "dependencies": {
+    "apollo-server-lambda": "^2.9.16",
     "aws-serverless-express": "^3.3.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "graphql": "^14.5.8",
     "reflect-metadata": "^0.1.13",
     "typedi": "^0.8.0"
   }

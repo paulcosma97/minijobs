@@ -10,4 +10,4 @@ const appModule = new AppModule([
 
 appModule.initializeDeclarations();
 
-export default appModule.expressApp;
+export default appModule;
