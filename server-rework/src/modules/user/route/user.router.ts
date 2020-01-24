@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import ExpressRouter from "../../../shared/express.router";
+import ExpressRouter from "../../../shared/module/express.router";
 
 @Service()
 export class UserRouter extends ExpressRouter {

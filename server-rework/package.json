@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/main.ts",
   "scripts": {
+    "start": "npx ts-node src/serverful.ts",
     "test": "test",
     "build": "bash ./scripts/build.sh"
   },

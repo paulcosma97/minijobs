@@ -1,8 +1,8 @@
-import Container, { Service } from "typedi";
+import Container from "typedi";
 import * as express from 'express';
-import CompositeModule from "./composite-module";
-import Module from "./module";
-import ExpressRouter from "./express.router";
+import CompositeModule from "./module/composite-module";
+import Module from "./module/module.interface";
+import ExpressRouter from "./module/express.router";
 
 export default class AppModule {
     private app = express();

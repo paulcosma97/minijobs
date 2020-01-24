@@ -1,4 +1,4 @@
-import Module from "./module";
+import Module from "./module.interface";
 
 export default class CompositeModule implements Module {
     constructor(private modules: Module[]) { }
