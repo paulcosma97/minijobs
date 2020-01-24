@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "module": "CommonJS",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "target": "ES6",
+        "lib": [
+            "ESNext"
+        ]
+    },
+    "exclude": ["src/serverful.ts"]
+}
