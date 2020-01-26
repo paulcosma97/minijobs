@@ -1,3 +1,6 @@
+import ServiceFactory from './factory';
+
 export default interface Module {
-    getDeclarations(): Function[];
+    getDeclarations?: () => Function[];
+    getFactories?: () => Function[];
 }

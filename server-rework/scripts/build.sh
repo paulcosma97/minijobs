@@ -14,6 +14,8 @@ mv -v ../build_src/* ./src > /dev/null
 rm -rf ../build_src
 
 cp ../package.json ./package.json
+mkdir ./src/shared/graphql
+cp ../src/shared/graphql/schema.graphql ./src/shared/graphql/schema.graphql
 echo -e "\t\tOK"
 
 echo -n Installing dependencies...
@@ -21,4 +23,5 @@ npm i --production &>/dev/null
 echo -e "\tOK"
 
 echo Source transpiled and installed successfully
+
 cd ..

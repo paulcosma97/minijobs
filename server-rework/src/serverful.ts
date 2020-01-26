@@ -3,14 +3,26 @@ import * as express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import * as cors from 'cors';
 import { createServer } from 'http';
+import Container from 'typedi';
+import { ExpressRequestToken, ExpressResponseToken } from './shared/server/request/express.interface';
 
 const app = express();
-const server = new ApolloServer({
-    typeDefs: appModule.graphQLDefinitions[0].typeDefs as any,
-    resolvers: appModule.graphQLDefinitions[0].resolvers as any
-});
-
-server.applyMiddleware({ app, path: '/graphql' })
 
 app.use('*', cors());
-createServer(app).listen(3000, () => console.log("GraphQL Server started on port 3000."))
+app.use('*', (req, res, next) => {
+    Container.set(ExpressRequestToken, req);
+    Container.set(ExpressResponseToken, res);
+    next();
+});
+
+(async () => {
+    const defs = await appModule.computeGraphQLDefinitions();
+
+    const server = new ApolloServer({
+        typeDefs: defs.typeDefs,
+        resolvers: defs.resolvers
+    });
+
+    server.applyMiddleware({ app, path: '/graphql' });
+    createServer(app).listen(3000, () => console.log('GraphQL Server started on port 3000.'));
+})();

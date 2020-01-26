@@ -1,18 +1,33 @@
-import { Service } from "typedi";
-import GraphQLRouter from "../../../shared/module/graphql.router";
+import { Service, Inject } from 'typedi';
+import GraphQLRouter from '../../../shared/module/graphql.router';
 import { gql } from 'apollo-server-lambda';
+import CookieHandler, { CookieHandlerToken } from '../../../shared/server/cookie/cookie-handler.interface';
 
 @Service()
 export class UserRouter implements GraphQLRouter {
-    typeDefs = gql`
+    constructor(@Inject(CookieHandlerToken) private cookieHandler: CookieHandler) {}
+
+    getTypeDefs = () => gql`
         type Query {
-            greet: String
+            greet(name: String!): String
+            getCookie(name: String!): String
+        }
+
+        type Mutation {
+            setCookie(name: String!, value: String!): String
         }
     `;
 
-    resolvers = {
+    getResolvers = () => ({
         Query: {
-            greet: () => "Hello World!"
+            greet: (_, { name }) => `Hello, ${name}!`,
+            getCookie: (_, { name }) => this.cookieHandler.getCookie(name)
+        },
+        Mutation: {
+            setCookie: (_, { name, value }) => {
+                this.cookieHandler.setCookie({ name, value, maxAge: 60 * 60 * 24, httpOnly: true });
+                return value;
+            }
         }
-    };
+    });
 }
