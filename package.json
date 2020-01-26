@@ -5,9 +5,8 @@
     "main": "index.js",
     "scripts": {
         "start:server": "cd server-rework && npm start",
-        "build": "cd scripts && bash build.sh",
-        "start:client": "cd client && npm start",
-        "deploy": "cd scripts && bash deploy.sh"
+        "build": "cd server-rework && npm run build",
+        "start:client": "cd client && npm start"
     },
     "repository": {
         "type": "git",
@@ -18,5 +17,8 @@
     "bugs": {
         "url": "https://github.com/paulcosma97/minijobs/issues"
     },
-    "homepage": "https://github.com/paulcosma97/minijobs#readme"
+    "homepage": "https://github.com/paulcosma97/minijobs#readme",
+    "devDependencies": {
+        "gulp": "^4.0.2"
+    }
 }
