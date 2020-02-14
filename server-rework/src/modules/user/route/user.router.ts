@@ -1,7 +1,7 @@
 import { Service, Inject } from 'typedi';
 import GraphQLRouter from '../../../shared/module/graphql.router';
 import { gql } from 'apollo-server-lambda';
-import CookieHandler, { CookieHandlerToken } from '../../../shared/server/cookie/cookie-handler.interface';
+import CookieHandler, { CookieHandlerToken } from '../../../shared/cookie/cookie-handler.interface';
 
 @Service()
 export class UserRouter implements GraphQLRouter {

@@ -1,45 +1,59 @@
 const gulp = require('gulp');
-const exec = require('child_process').exec;
+const { spawn } = require('child_process');
 
-const execAsync = (cmd, { verbose, path }) =>
-    new Promise((resolve, reject) =>
-        exec(`cd ${path} && ${cmd}`, (err, stdout, stderr) => {
+function exec(cmd, args, relativePath, cb) {
+    const spawnOptions = {
+        shell: true,
+        cwd: `${process.cwd()}/${relativePath}`,
+        stdio: 'inherit'
+    };
+    const npm = spawn(cmd, args, spawnOptions);
+    npm.on('close', function(code) {
+        if (code === 0) {
+            cb();
+        } else {
+            cb(`Process exited with status ${code}`);
+        }
+    });
+    process.once('SIGINT', function() {
+        npm.kill();
+    });
+}
+
+function execAsync(cmd, args, relativePath) {
+    return new Promise((resolve, reject) => {
+        exec(cmd, args, relativePath, err => {
             if (err) {
-                return reject(err);
+                reject({ error: err, relativePath });
+            } else {
+                resolve();
             }
-
-            if (verbose && stdout) {
-                console.log(stdout);
-            }
-
-            if (verbose && stderr) {
-                console.error(stderr);
-            }
-
-            resolve();
-        })
-    );
+        });
+    });
+}
 
 gulp.task('build:server:clean-old-binaries', async () => {
-    await execAsync('rm -rf ./build', { path: './server-rework' }).catch(() => null);
+    await execAsync('rm', ['-rf', './build'], './server-rework').catch(() => null);
 });
 
 gulp.task('build:server:transpile-source-code', async () => {
-    await execAsync('npx tsc', { path: './server-rework' });
-    await execAsync('mkdir ./build_src', { path: './server-rework' });
-    await execAsync('mv -v ./* ../build_src', { path: './server-rework/build' });
-    await execAsync('mkdir ./src', { path: './server-rework/build' });
-    await execAsync('mv -v ../build_src/* ./src', { path: './server-rework/build' });
-    await execAsync('rm -rf ./build_src', { path: './server-rework' });
-    await execAsync('cp ../package.json ./package.json', { path: './server-rework/build' });
-    await execAsync('mkdir ./src/shared/graphql', { path: './server-rework/build' });
-    await execAsync('cp ../src/shared/graphql/schema.graphql ./src/shared/graphql/schema.graphql', {
-        path: './server-rework/build'
-    });
+    await execAsync('npx', ['tsc'], './server-rework');
+    await execAsync('mkdir', ['./build_src'], './server-rework');
+    await execAsync('mv', ['-v', './*', '../build_src'], './server-rework/build');
+    await execAsync('mkdir', ['./src'], './server-rework/build');
+    await execAsync('mv', ['-v', '../build_src/*', './src'], './server-rework/build');
+    await execAsync('rm', ['-rf ./build_src'], './server-rework');
+    await execAsync('cp', ['../package.json', './package.json'], './server-rework/build');
+    await execAsync('mkdir', ['./src/shared/graphql'], './server-rework/build');
+    await execAsync(
+        'cp',
+        ['../src/shared/graphql/schema.graphql', './src/shared/graphql/schema.graphql'],
+        './server-rework/build'
+    );
 });
 
 gulp.task('build:server:install-dependencies', async () => {
-    await execAsync('npm i --production', { path: './server-rework/build' });
+    await execAsync('npm', ['i', '--production'], './server-rework/build');
 });
 
 gulp.task(
@@ -51,9 +65,19 @@ gulp.task(
     )
 );
 
-gulp.task(
-    'deploy:server',
-    gulp.series('build:server', async () => {
-        await execAsync('terraform plan', { path: './ops' });
-    })
-);
+gulp.task('aws:set-credentials', async () => {
+    process.env.AWS_ACCESS_KEY_ID = 'AKIAZVZMKZ63GOYRD3UB';
+    process.env.AWS_SECRET_ACCESS_KEY = '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';
+});
+
+gulp.task('terraform:apply', async () => {
+    await execAsync('terraform', ['apply'], './ops');
+});
+
+gulp.task('deploy:terraform', gulp.series('aws:set-credentials', 'terraform:apply'));
+
+gulp.task('deploy:server', gulp.series('build:server', 'deploy:terraform'));
+
+gulp.task('serve:server', async () => {
+    await execAsync('npx', ['nodemon'], './server-rework');
+});

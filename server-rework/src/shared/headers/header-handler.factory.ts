@@ -1,4 +1,4 @@
-import ServiceFactory from '../../module/factory';
+import ServiceFactory from '../module/factory';
 import HeaderHandler, { HeaderHandlerToken } from './header-handler.interface';
 import Container, { Token, Service, Inject } from 'typedi';
 import ServerConfiguration, { ServerConfigurationToken } from '../config/server.config';

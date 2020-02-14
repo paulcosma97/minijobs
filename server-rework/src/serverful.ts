@@ -4,7 +4,11 @@ import { ApolloServer } from 'apollo-server-express';
 import * as cors from 'cors';
 import { createServer } from 'http';
 import Container from 'typedi';
-import { ExpressRequestToken, ExpressResponseToken } from './shared/server/request/express.interface';
+
+import {
+    ExpressRequestToken,
+    ExpressResponseToken
+} from './shared/request/express.interface';
 
 const app = express();
 
@@ -20,9 +24,16 @@ app.use('*', (req, res, next) => {
 
     const server = new ApolloServer({
         typeDefs: defs.typeDefs,
-        resolvers: defs.resolvers
+        resolvers: defs.resolvers,
+        playground: {
+            settings: {
+                'request.credentials': 'include'
+            }
+        }
     });
 
     server.applyMiddleware({ app, path: '/graphql' });
-    createServer(app).listen(3000, () => console.log('GraphQL Server started on port 3000.'));
+    createServer(app).listen(3000, () =>
+        console.log('GraphQL Server started on port 3000.')
+    );
 })();
