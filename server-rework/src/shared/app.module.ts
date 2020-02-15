@@ -1,21 +1,37 @@
-import Container from 'typedi';
 import CompositeModule from './module/composite-module';
 import Module from './module/module.interface';
-import GraphQLRouter from './module/graphql.router';
-import { DocumentNode } from 'graphql';
-import { IResolvers, gql } from 'apollo-server-lambda';
+import ExpressRouter from './router/express-router.interface';
 import ServiceFactory from './module/factory';
-import { readFile } from 'fs';
-import * as path from 'path';
+import * as express from 'express';
+import * as cors from 'cors';
+import Container from 'typedi';
+import * as bodyParser from 'body-parser';
+import * as compression from 'compression';
+import { ExpressRequestToken, ExpressResponseToken } from './request/express.interface';
 
-const isGraphQLRouter = instance => instance.getResolvers && instance.getTypeDefs;
+const isExpressRouter = (instance: any): instance is ExpressRouter => !!instance.getRouter;
 
 export default class AppModule {
-    private gqlDefinitions: IResolvers[] = [];
+    private readonly expressApp: express.Application;
 
-    constructor(private modules: Module[]) {}
+    constructor(private modules: Module[]) {
+        this.expressApp = express();
+        this.init();
+    }
 
-    initializeDeclarations() {
+    private init(): void {
+        this.expressApp.use('*', cors());
+        this.expressApp.use(bodyParser.urlencoded({ extended: false }));
+        this.expressApp.use(bodyParser.json());
+        this.expressApp.use('*', compression());
+        this.expressApp.use('*', (req, res, next) => {
+            Container.set(ExpressRequestToken, req);
+            Container.set(ExpressResponseToken, res);
+            next();
+        });
+    }
+
+    initializeDeclarations(): void {
         const module = new CompositeModule(this.modules);
         const declarations = module.getDeclarations();
         Container.import(declarations);
@@ -24,25 +40,20 @@ export default class AppModule {
         Container.import(factories);
         factories
             .map(factoryClass => Container.get(factoryClass))
-            .forEach((factory: ServiceFactory<any>) => Container.set(factory.getToken(), factory.build()));
+            .forEach((factory: ServiceFactory<any>) =>
+                Container.set(factory.getToken(), factory.build())
+            );
 
         declarations
             .map(declaration => Container.get(declaration))
-            .filter(isGraphQLRouter)
-            .forEach((router: GraphQLRouter) => {
-                console.info(`Found GraphQL router ${router.constructor.name}.`);
-                this.gqlDefinitions.push(router.getResolvers());
+            .filter(isExpressRouter)
+            .forEach(router => {
+                console.info(`Found express router ${router.constructor.name}.`);
+                this.expressApp.use(router.resourcePath, router.getRouter());
             });
     }
 
-    async computeGraphQLDefinitions(): Promise<{ typeDefs: DocumentNode; resolvers: IResolvers }> {
-        return {
-            typeDefs: await new Promise((resolve, reject) =>
-                readFile(path.join(__dirname, './graphql/schema.graphql'), (err, data) =>
-                    err ? reject(err) : resolve(gql(data.toString()))
-                )
-            ),
-            resolvers: this.gqlDefinitions as any
-        };
+    get application(): express.Application {
+        return this.expressApp;
     }
 }

@@ -71,7 +71,7 @@ gulp.task('aws:set-credentials', async () => {
 });
 
 gulp.task('terraform:apply', async () => {
-    await execAsync('terraform', ['apply'], './ops');
+    await execAsync('terraform', ['apply', '-auto-approve'], './ops');
 });
 
 gulp.task('deploy:terraform', gulp.series('aws:set-credentials', 'terraform:apply'));

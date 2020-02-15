@@ -20,5 +20,6 @@
     "homepage": "https://github.com/paulcosma97/minijobs#readme",
     "devDependencies": {
         "gulp": "^4.0.2"
-    }
+    },
+    "dependencies": {}
 }

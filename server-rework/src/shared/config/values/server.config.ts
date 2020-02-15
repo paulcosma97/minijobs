@@ -1,4 +1,4 @@
-import ServerConfiguration from '../server.config';
+import ServerConfiguration from '../types/server.config';
 
 export const serverConfiguration: ServerConfiguration = {
     production: !!process.env.PRODUCTION,

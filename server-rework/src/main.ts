@@ -1,10 +1,9 @@
-import 'reflect-metadata';
 import AppModule from './shared/app.module';
 import UserModule from './modules/user/user.module';
-import ServerModule from './shared/server/server.module';
 import JobsModule from './modules/jobs/jobs.module';
+import ConfigurationModule from './shared/config/config.module';
 
-const appModule = new AppModule([new ServerModule(), new UserModule(), new JobsModule()]);
+const appModule = new AppModule([new ConfigurationModule(), new UserModule(), new JobsModule()]);
 
 appModule.initializeDeclarations();
 

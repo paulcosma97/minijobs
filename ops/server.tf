@@ -52,7 +52,7 @@ resource "aws_api_gateway_rest_api" "server_lambda" {
 }
 
 resource "aws_api_gateway_resource" "server_lambda_api" {
-  path_part   = "api"
+  path_part   = "{proxy+}"
   parent_id   = aws_api_gateway_rest_api.server_lambda.root_resource_id
   rest_api_id = aws_api_gateway_rest_api.server_lambda.id
 }
@@ -69,7 +69,7 @@ resource "aws_api_gateway_integration" "server_lambda_gw" {
   resource_id             = aws_api_gateway_resource.server_lambda_api.id
   http_method             = aws_api_gateway_method.server_lambda_gw_method.http_method
   integration_http_method = "POST"
-  type                    = "AWS"
+  type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.server_lambda.invoke_arn
 }
 

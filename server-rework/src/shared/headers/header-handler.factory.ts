@@ -1,7 +1,7 @@
 import ServiceFactory from '../module/factory';
 import HeaderHandler, { HeaderHandlerToken } from './header-handler.interface';
 import Container, { Token, Service, Inject } from 'typedi';
-import ServerConfiguration, { ServerConfigurationToken } from '../config/server.config';
+import ServerConfiguration, { ServerConfigurationToken } from '../config/types/server.config';
 import LambdaHeaderHandler from './lambda-header-handler.service';
 import { APIGatewayEventToken } from '../request/lambda.interface';
 import ExpressHeaderHandler from './express-header-handler.service';

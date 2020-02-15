@@ -4,8 +4,12 @@ import { getRepository } from 'typeorm';
 import { User, defaultPermissionMask } from '../models/user.model';
 import { handleError, UnauthorizedError, ForbiddenError } from '../utils/error-handler';
 import env from '../configs/env';
-import { UserPermissionMask, hasPermissions, computeAdminPermissionMask } from '../utils/permissions';
-import axios from "axios";
+import {
+    UserPermissionMask,
+    hasPermissions,
+    computeAdminPermissionMask
+} from '../utils/permissions';
+import axios from 'axios';
 import FacebookProfile from '../dtos/facebook-profile.dto';
 import { uploadFile } from './file.service';
 
@@ -31,86 +35,95 @@ export const JWTCookieName = 'access-token';
 export const JWTCookieMaxAge = 1000 * 60 * 60 * 24 * 14; // 14 days
 
 export const resolveContext = () => {
-    return (req, res, next) => (async () => {
+    return (req, res, next) =>
+        (async () => {
+            const token: string = req.cookies[JWTCookieName];
 
-        const token: string = req.cookies[JWTCookieName];
+            // If token doesn't exist, go to next handler only if is permitted
+            if (!token) {
+                return next();
+            }
 
-        // If token doesn't exist, go to next handler only if is permitted
-        if (!token) {
-            return next();
-        }
+            const [tokenPayload, error] = await decodeToken<JWTToken>(token);
 
-        const [ tokenPayload, error ] = await decodeToken<JWTToken>(token);
+            // If token has been altered, clear cookie and exit
+            if (error) {
+                res.clearCookie(JWTCookieName);
+                throw new UnauthorizedError('Could not decode token.');
+            }
 
-        // If token has been altered, clear cookie and exit
-        if (error) {
-            res.clearCookie(JWTCookieName);
-            throw new UnauthorizedError('Could not decode token.');
-        }
+            // Update cookie if older than half of lifespan
+            if (new Date().getTime() - tokenPayload.expires < JWTCookieMaxAge / 2) {
+                res.clearCookie(JWTCookieName);
+                const newToken = await createToken({
+                    email: tokenPayload.email,
+                    expires: new Date().getTime() + JWTCookieMaxAge
+                });
+                res.cookie(JWTCookieName, newToken, { maxAge: JWTCookieMaxAge });
+            }
 
-        // Update cookie if older than half of lifespan
-        if (new Date().getTime() - tokenPayload.expires < JWTCookieMaxAge / 2) {
-            res.clearCookie(JWTCookieName);
-            const newToken = await createToken({ email: tokenPayload.email, expires: new Date().getTime() + JWTCookieMaxAge });
-            res.cookie(JWTCookieName, newToken, { maxAge: JWTCookieMaxAge });
-        }
+            const repository = await getRepository(User);
+            const user = await repository.findOne({ where: { email: tokenPayload.email } });
 
-        const repository = await getRepository(User);
-        const user = await repository.findOne({ where: { email: tokenPayload.email } });
+            if (!user) {
+                res.clearCookie(JWTCookieName);
+                throw new UnauthorizedError(`User '${tokenPayload.email}' could not be found.`);
+            }
 
-        if (!user) {
-            res.clearCookie(JWTCookieName);
-            throw new UnauthorizedError(`User '${tokenPayload.email}' could not be found.`);
-        }
+            res.locals = {
+                user
+            };
 
-        res.locals = {
-            user
-        };
-
-        next();
-    })().catch(handleError(res));
-}
+            next();
+        })().catch(handleError(res));
+};
 
 /**
  * Middleware function to restrict access.
- * 
+ *
  * Defaults to allow any auth state and role USER
  */
 export const restrictAccess: OnlyAllowRequestHandler = (args: OnlyAllowRequestHandlerArgs) => {
-    args.authenticated = args.authenticated === undefined ? AuthenticatedState.ANY : args.authenticated;
+    args.authenticated =
+        args.authenticated === undefined ? AuthenticatedState.ANY : args.authenticated;
     args.permissions = !args.permissions ? [] : args.permissions;
 
-    return (_, res, next) => (async () => {
-        const user = res.locals.user
+    return (_, res, next) =>
+        (async () => {
+            const user = res.locals.user;
 
-        if (args.authenticated === AuthenticatedState.ANONYMOUS) {
-            if (user) {
+            if (args.authenticated === AuthenticatedState.ANONYMOUS) {
+                if (user) {
+                    throw new ForbiddenError();
+                }
+            }
+
+            if (args.authenticated === AuthenticatedState.AUTHENTICATED) {
+                if (!user) {
+                    throw new UnauthorizedError();
+                }
+            }
+
+            if (!hasPermissions(user, args.permissions)) {
                 throw new ForbiddenError();
             }
-        }
 
-        if (args.authenticated === AuthenticatedState.AUTHENTICATED) {
-            if (!user) {
-                throw new UnauthorizedError();
-            }
-        }
-
-        if (!hasPermissions(user, args.permissions)) {
-            throw new ForbiddenError();
-        }
-
-        next();
-    })().catch(handleError(res));
-}
+            next();
+        })().catch(handleError(res));
+};
 
 export function decodeToken<T>(token: string): Promise<[T, VerifyErrors]> {
     return new Promise(resolve => {
-        verify(token, env.jwt.secret, (err, decoded) => err ? resolve([null, err]) : resolve([decoded as unknown as T, null]));
+        verify(token, env.jwt.secret, (err, decoded) =>
+            err ? resolve([null, err]) : resolve([(decoded as unknown) as T, null])
+        );
     });
 }
 
 export function createToken(token: JWTToken): Promise<string> {
-    return new Promise((resolve, reject) => sign(token, env.jwt.secret, (err, token: string) => err ? reject(err) : resolve(token)));
+    return new Promise((resolve, reject) =>
+        sign(token, env.jwt.secret, (err, token: string) => (err ? reject(err) : resolve(token)))
+    );
 }
 
 export async function authenticate(accessToken: string, response: Response): Promise<User> {
@@ -118,15 +131,15 @@ export async function authenticate(accessToken: string, response: Response): Pro
     const user = await createOrUpdateUser(profile);
     await setAuthCookie(user, response);
     return user;
-} 
+}
 
 function getFacebookProfile(accessToken: string): Promise<FacebookProfile> {
     return axios
-    .get<FacebookProfile>(
-      "https://graph.facebook.com/v4.0/me?fields=name,first_name,last_name,picture,email&access_token=" +
-        accessToken
-    )
-    .then(res => res.data)
+        .get<FacebookProfile>(
+            'https://graph.facebook.com/v4.0/me?fields=name,first_name,last_name,picture,email&access_token=' +
+                accessToken
+        )
+        .then(res => res.data);
 }
 
 async function createOrUpdateUser(profile: FacebookProfile): Promise<User> {
@@ -136,7 +149,10 @@ async function createOrUpdateUser(profile: FacebookProfile): Promise<User> {
     });
 
     if (!found) {
-        const file = await uploadFile(profile.picture.data.url, `user/${profile.email}/profile-picture`);
+        const file = await uploadFile(
+            profile.picture.data.url,
+            `user/${profile.email}/profile-picture`
+        );
 
         found = {
             email: profile.email,
@@ -146,7 +162,6 @@ async function createOrUpdateUser(profile: FacebookProfile): Promise<User> {
             permissionMask: defaultPermissionMask,
             lastViewed: []
         };
-
     }
 
     if (env.administrators.includes(found.email)) {
