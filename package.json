@@ -1,12 +1,25 @@
 {
-  "name": "mini-jobs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "server": "cd server && npm start",
-    "client": "cd client && npm start"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "minijobs",
+    "version": "1.0.0",
+    "description": "mini-jobs",
+    "main": "index.js",
+    "scripts": {
+        "start:server": "cd server-rework && npm start",
+        "build": "cd server-rework && npm run build",
+        "start:client": "cd client && npm start"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/paulcosma97/minijobs.git"
+    },
+    "author": "Paul Cosma",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/paulcosma97/minijobs/issues"
+    },
+    "homepage": "https://github.com/paulcosma97/minijobs#readme",
+    "devDependencies": {
+        "gulp": "^4.0.2"
+    },
+    "dependencies": {}
 }
