@@ -1,15 +1,19 @@
-import { Service, Inject } from 'typedi';
-import JWTConfiguration, { JWTConfigurationToken } from '../config/types/jwt.config';
+import {Inject, Service} from 'typedi';
+import JWTConfiguration, {JWTConfigurationToken} from '../config/types/jwt.config';
 import JWTToken from './types/jwt-token.interface';
-import { verify, sign, VerifyErrors } from 'jsonwebtoken';
+import {sign, verify} from 'jsonwebtoken';
 import axios from 'axios';
 import FacebookProfile from './types/facebook-profile.dto';
-import User from '../../modules/user/model/user.model';
-import { Response } from 'express';
+import User from '../modules/user/model/user.model';
+import {Response} from 'express';
+import UserRepository, {UserRepositoryToken} from "../modules/user/repository/user.repository";
 
 @Service()
 export default class AuthService {
-    constructor(@Inject(JWTConfigurationToken) private jwtConfig: JWTConfiguration) {}
+    constructor(
+        @Inject(JWTConfigurationToken) private jwtConfig: JWTConfiguration,
+        @Inject(UserRepositoryToken) private userRepository: UserRepository
+    ) {}
 
     public decodeToken(token: string): Promise<JWTToken> {
         return new Promise((resolve, reject) => {
@@ -29,9 +33,24 @@ export default class AuthService {
 
     public async login(accessToken: string): Promise<User> {
         const profile = await this.getFacebookProfile(accessToken);
-        const user = await createOrUpdateUser(profile);
-        await setAuthCookie(user, response);
-        return user;
+        return this.getOrCreateUser(profile);
+    }
+
+    private async getOrCreateUser(data: FacebookProfile): Promise<User> {
+        const userOptional = await this.userRepository.findBy('email', data.email);
+        if (userOptional.exists()) {
+            return userOptional.get();
+        }
+
+        return this.userRepository.save({
+            id: null,
+            email: data.email,
+            firstName: data.first_name,
+            lastName: data.last_name,
+            ownRatings: [],
+            picture: '',
+            permissions: []
+        });
     }
 
     private getFacebookProfile(accessToken: string): Promise<FacebookProfile> {
@@ -43,15 +62,16 @@ export default class AuthService {
             .then(res => res.data);
     }
 
-    private setAuthCookie(user: User, response: Response) {
+    async setAuthCookie(user: User, response: Response) {
         const token = await this.encodeToken({
             email: user.email,
-            expires: new Date().getTime() + JWTCookieMaxAge
+            expires: new Date().getTime() + this.jwtConfig.maxAge
         });
 
-        response.cookie(JWTCookieName, token, {
-            maxAge: JWTCookieMaxAge,
-            httpOnly: true
+        response.cookie(this.jwtConfig.cookieName, token, {
+            maxAge: this.jwtConfig.maxAge,
+            httpOnly: true,
+            sameSite: 'lax'
         });
     }
 }

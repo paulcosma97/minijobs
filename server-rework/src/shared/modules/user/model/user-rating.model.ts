@@ -1,4 +1,4 @@
-import { ForeignKey } from "../../../shared/repository/schema.utils";
+import { ForeignKey } from "../../../repository/schema.utils";
 import User from "./user.model";
 
 export default interface UserRating {

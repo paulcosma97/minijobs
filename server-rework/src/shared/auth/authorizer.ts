@@ -1,7 +1,8 @@
 import * as Express from 'express';
-import { Permission } from './permission.enum';
-import { verify, sign, VerifyErrors } from 'jsonwebtoken';
-import { UnauthorizedError } from './error/auth.errors';
+import {Permission} from './permission.enum';
+import {verify, VerifyErrors} from 'jsonwebtoken';
+import {UnauthorizedError} from './error/auth.errors';
+import JWTToken from "./types/jwt-token.interface";
 
 export const JWTCookieName = 'access-token';
 export const JWTCookieMaxAge = 1000 * 60 * 60 * 24 * 14; // 14 days

@@ -37,7 +37,8 @@ gulp.task('build:server:clean-old-binaries', async () => {
 });
 
 gulp.task('build:server:transpile-source-code', async () => {
-    await execAsync('npx', ['tsc'], './server-rework');
+    await execAsync('npm', ['install'], './server-rework');
+    await execAsync('npx', ['tsc -p .'], './server-rework');
     await execAsync('mkdir', ['./build_src'], './server-rework');
     await execAsync('mv', ['-v', './*', '../build_src'], './server-rework/build');
     await execAsync('mkdir', ['./src'], './server-rework/build');

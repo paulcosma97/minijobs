@@ -19,7 +19,8 @@
     },
     "homepage": "https://github.com/paulcosma97/minijobs#readme",
     "devDependencies": {
-        "gulp": "^4.0.2"
-    },
-    "dependencies": {}
+        "gulp": "^4.0.2",
+        "typescript": "^3.9.3"
+
+    }
 }
