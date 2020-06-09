@@ -1,6 +1,7 @@
-import { Service, Inject } from 'typedi';
-import CookieHandler, { CookieHandlerToken } from '../../../cookie/cookie-handler.interface';
+import {Inject, Service} from 'typedi';
+import CookieHandler, {CookieHandlerToken} from '../../../cookie/cookie-handler.interface';
 import AbstractExpressRouter from '../../../router/express.router';
+import {isAuthenticated} from "../../../auth/authorizer";
 
 @Service()
 export class UserRouter extends AbstractExpressRouter {
@@ -8,6 +9,9 @@ export class UserRouter extends AbstractExpressRouter {
         super('/users');
     }
 
-    getUser = this.get('/', (_, res) =>
-        res.json({ greet: 'Hello user!' }));
+    getUser = this.get('/profile', isAuthenticated, (_, res) =>
+        res.json({
+            ...res.locals.user,
+            password: undefined
+        }));
 }

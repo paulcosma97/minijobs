@@ -19,27 +19,27 @@ export default abstract class AbstractExpressRouter implements ExpressRouter {
         );
     }
 
-    protected get(path: string, handler: RequestHandler): void {
-        this.createRoute(path, 'get', handler);
+    protected get(path: string, ...handlers: RequestHandler[]): void {
+        this.createRoute(path, 'get', ...handlers);
     }
 
-    protected post(path: string, handler: RequestHandler): void {
-        this.createRoute(path, 'post', handler);
+    protected post(path: string, ...handlers: RequestHandler[]): void {
+        this.createRoute(path, 'post', ...handlers);
     }
 
-    protected put(path: string, handler: RequestHandler): void {
-        this.createRoute(path, 'put', handler);
+    protected put(path: string, ...handlers: RequestHandler[]): void {
+        this.createRoute(path, 'put', ...handlers);
     }
 
-    protected delete(path: string, handler: RequestHandler): void {
-        this.createRoute(path, 'delete', handler);
+    protected delete(path: string, ...handlers: RequestHandler[]): void {
+        this.createRoute(path, 'delete', ...handlers);
     }
 
-    protected head(path: string, handler: RequestHandler): void {
-        this.createRoute(path, 'head', handler);
+    protected head(path: string, ...handlers: RequestHandler[]): void {
+        this.createRoute(path, 'head', ...handlers);
     }
 
-    protected all(path: string, handler: RequestHandler): void {
-        this.createRoute(path, 'all', handler);
+    protected all(path: string, ...handlers: RequestHandler[]): void {
+        this.createRoute(path, 'all', ...handlers);
     }
 }

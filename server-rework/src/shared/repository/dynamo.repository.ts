@@ -16,7 +16,7 @@ export default abstract class DynamoRepository<EntityLike extends Entity> implem
         this.database = new DynamoDB.DocumentClient();
     }
 
-    async find(key: string): Promise<Optional<EntityLike>> {
+    async findOne(key: string): Promise<Optional<EntityLike>> {
         try {
             const result = await this.database.get({
                 TableName: this.tableName,
@@ -31,7 +31,7 @@ export default abstract class DynamoRepository<EntityLike extends Entity> implem
         }
     }
 
-    async delete(key: string): Promise<void> {
+    async deleteOne(key: string): Promise<void> {
         await this.database.delete({
             TableName: this.tableName,
             Key: {
@@ -40,7 +40,7 @@ export default abstract class DynamoRepository<EntityLike extends Entity> implem
         }).promise();
     }
 
-    async save(entity: EntityLike): Promise<EntityLike> {
+    async saveOne(entity: EntityLike): Promise<EntityLike> {
         if (!entity.id) {
             entity.id = uuid.v4();
         }
@@ -53,7 +53,7 @@ export default abstract class DynamoRepository<EntityLike extends Entity> implem
         return entity;
     }
 
-    async findBy<Key extends keyof EntityLike>(field: Key, value: EntityLike[Key]): Promise<Optional<EntityLike>> {
+    async findOneBy<Key extends keyof EntityLike>(field: Key, value: EntityLike[Key]): Promise<Optional<EntityLike>> {
         try {
             const result = await this.database.get({
                 TableName: this.tableName,
@@ -67,11 +67,11 @@ export default abstract class DynamoRepository<EntityLike extends Entity> implem
         }
     }
 
-    findOrFail(key: string): Promise<EntityLike> {
-        return this.find(key).then(entity => entity.orThrow(EntityNotFoundError))
+    findOneOrFail(key: string): Promise<EntityLike> {
+        return this.findOne(key).then(entity => entity.orThrow(EntityNotFoundError))
     }
 
-    findByOrFail<Key extends keyof EntityLike>(field: Key, value: EntityLike[Key]): Promise<EntityLike> {
-        return this.findBy(field, value).then(entity => entity.orThrow(EntityNotFoundError))
+    findOneByOrFail<Key extends keyof EntityLike>(field: Key, value: EntityLike[Key]): Promise<EntityLike> {
+        return this.findOneBy(field, value).then(entity => entity.orThrow(EntityNotFoundError))
     }
 }

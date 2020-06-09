@@ -37,12 +37,12 @@ export default class AuthService {
     }
 
     private async getOrCreateUser(data: FacebookProfile): Promise<User> {
-        const userOptional = await this.userRepository.findBy('email', data.email);
+        const userOptional = await this.userRepository.findOneBy('email', data.email);
         if (userOptional.exists()) {
             return userOptional.get();
         }
 
-        return this.userRepository.save({
+        return this.userRepository.saveOne({
             id: null,
             email: data.email,
             firstName: data.first_name,

@@ -6,9 +6,10 @@ import AuthService from "./auth.service";
 import {Permission} from './permission.enum';
 import {UnauthorizedError} from './error/auth.errors';
 import JWTToken from "./types/jwt-token.interface";
+import {ForbiddenError} from "../../../../server/src/utils/error-handler";
 
-export function hasPermissions(...permissionsArg: Permission[]): Express.RequestHandler {
-    const permissions = permissionsArg || [];
+export function hasPermissions(...permissionsArgs: Permission[]): Express.RequestHandler {
+    const permissions = permissionsArgs || [];
 
     return async (req, res, next) => {
         const authService = Container.get(AuthService);
@@ -19,7 +20,7 @@ export function hasPermissions(...permissionsArg: Permission[]): Express.Request
 
         // If token doesn't exist, go to next handler only if is permitted
         if (!token) {
-            return next();
+            throw new UnauthorizedError();
         }
 
         let tokenPayload: JWTToken;
@@ -30,20 +31,28 @@ export function hasPermissions(...permissionsArg: Permission[]): Express.Request
             throw new UnauthorizedError('Could not decode token.');
         }
 
-        const user = await userRepository.findByOrFail('email', tokenPayload.email).catch(() => {
+        const user = await userRepository.findOneByOrFail('email', tokenPayload.email).catch(() => {
             res.clearCookie(jwtConfig.cookieName);
             throw new UnauthorizedError(`User '${tokenPayload.email}' could not be found.`);
         });
+
+        const hasAllPermissions = permissions.every(requiredPermission =>
+            user.permissions.find(userPermission => requiredPermission === userPermission));
+
+        if (!hasAllPermissions) {
+            throw new ForbiddenError(`User '${user.email}' is missing required permissions.`);
+        }
 
         // Update cookie if older than half of lifespan
         if (new Date().getTime() - tokenPayload.expires < jwtConfig.maxAge / 2) {
             await authService.setAuthCookie(user, res);
         }
 
-        res.locals = {
-            user
-        };
+        res.locals = res.locals || {};
+        res.locals.user = user;
 
         next();
     };
 }
+
+export const isAuthenticated = hasPermissions();
