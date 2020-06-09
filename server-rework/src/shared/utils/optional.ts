@@ -1,6 +1,7 @@
 import {BaseError} from "./error";
 
 export class EmptyOptionalError extends BaseError {}
+type ResOrResFn<T> = (() => T) | T;
 
 export default class Optional<T> {
     static of<T>(item: T | null | undefined): Optional<T> {
@@ -24,9 +25,13 @@ export default class Optional<T> {
         return this.item;
     }
 
-    orThrow<Err extends BaseError>(e: { new(): Err }): T | never {
+    orThrow<Err extends BaseError>(e: ResOrResFn<Err>): T | never {
         if (this.isEmpty()) {
-            throw new e;
+            if (typeof e === 'function') {
+                throw e();
+            } else {
+                throw e;
+            }
         }
 
         return this.item;

@@ -63,6 +63,8 @@ export default class AuthService {
     }
 
     async setAuthCookie(user: User, response: Response) {
+        response.clearCookie(this.jwtConfig.cookieName);
+
         const token = await this.encodeToken({
             email: user.email,
             expires: new Date().getTime() + this.jwtConfig.maxAge
