@@ -12,7 +12,7 @@ test('Optional#of', it => {
 
 test('Optional#get', it => {
     for (const passableValue of passableValues) {
-        it.is(Optional.of(passableValue).get(), 1);
+        it.is(Optional.of(passableValue).get(), passableValue);
     }
 
     for (const throwsOnElement of throwsOn) {
