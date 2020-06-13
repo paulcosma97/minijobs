@@ -5,8 +5,9 @@
     "main": "index.js",
     "scripts": {
         "start:server": "cd server-rework && npm start",
-        "build": "cd server-rework && npm run build",
-        "start:client": "cd client && npm start"
+        "start:client": "cd client && npm start",
+        "test:server": "cd server-rework && npm test",
+        "build": "cd server-rework && npm run build"
     },
     "repository": {
         "type": "git",

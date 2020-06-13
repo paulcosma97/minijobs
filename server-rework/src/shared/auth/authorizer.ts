@@ -6,7 +6,6 @@ import AuthService from './auth.service';
 import {Permission} from './permission.enum';
 import {UnauthorizedError} from './error/auth.errors';
 import JWTToken from './types/jwt-token.interface';
-import {ForbiddenError} from '../../../../server/src/utils/error-handler';
 
 export function hasPermissions(...permissionsArgs: Permission[]): Express.RequestHandler {
     const permissions = permissionsArgs || [];

@@ -5,7 +5,7 @@
   "main": "src/serverful.ts",
   "scripts": {
     "start": "npx ts-node src/serverful.ts",
-    "test": "test",
+    "test": "npx ava-ts",
     "lint": "npx eslint src",
     "lint:fix": "npx eslint src --fix",
     "build": "bash ./scripts/build.sh"
@@ -22,6 +22,8 @@
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",
     "apollo-server-express": "^2.9.16",
+    "ava": "^3.8.2",
+    "ava-ts": "^0.25.2",
     "aws-sdk": "^2.609.0",
     "cors": "^2.8.5",
     "eslint": "^7.2.0",
@@ -39,5 +41,10 @@
     "jsonwebtoken": "^8.5.1",
     "typedi": "^0.8.0",
     "uuid": "^8.1.0"
+  },
+  "ava": {
+    "verbose": true,
+    "extensions": "test.ts",
+    "files": "src/**/*.test.ts"
   }
 }

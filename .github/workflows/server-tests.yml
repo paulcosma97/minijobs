@@ -4,15 +4,13 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -25,18 +23,11 @@ jobs:
       run: ls -al
     - name: Print User
       run: whoami
-    - name: Start Docker containers
-      run: |
-        cd ./docker
-        docker-compose up -d
-        cd ..
     - name: Install server dependencies
       run: |
-        cd ./server
-        npm i
-    - name: Wait for database
-      run: npx wait-port 50500
+        cd ./server-rework
+        npm ci
     - name: Test server
-      run: npm run test
+      run: npm test
       env:
         CI: true
