@@ -3,7 +3,7 @@ name: Tests
 on: [push]
 
 jobs:
-  'Server Tests':
+  server-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
