@@ -1,9 +1,9 @@
-name: Server Tests
+name: Tests
 
 on: [push]
 
 jobs:
-  build:
+  'Server Tests':
     runs-on: ubuntu-latest
     strategy:
       matrix:
