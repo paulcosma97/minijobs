@@ -1,4 +1,4 @@
-import {Token} from "typedi";
+import {Token} from 'typedi';
 
 export default interface UserConfiguration {
     tableName: string;

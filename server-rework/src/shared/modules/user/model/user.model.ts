@@ -1,6 +1,6 @@
-import {ForeignKey, PrimaryKey} from "../../../repository/schema.utils";
-import Entity from "../../../repository/entity.model";
-import UserRating from "./user-rating.model";
+import {ForeignKey, PrimaryKey} from '../../../repository/schema.utils';
+import Entity from '../../../repository/entity.model';
+import UserRating from './user-rating.model';
 
 export default interface User extends Entity {
     id: PrimaryKey;

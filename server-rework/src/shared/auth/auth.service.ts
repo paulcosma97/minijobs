@@ -6,7 +6,7 @@ import axios from 'axios';
 import FacebookProfile from './types/facebook-profile.dto';
 import User from '../modules/user/model/user.model';
 import {Response} from 'express';
-import UserRepository, {UserRepositoryToken} from "../modules/user/repository/user.repository";
+import UserRepository, {UserRepositoryToken} from '../modules/user/repository/user.repository';
 
 @Service()
 export default class AuthService {

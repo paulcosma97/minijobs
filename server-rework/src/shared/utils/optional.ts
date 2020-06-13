@@ -1,4 +1,4 @@
-import {BaseError} from "./error";
+import {BaseError} from './error';
 
 export class EmptyOptionalError extends BaseError {}
 type ResOrResFn<T> = (() => T) | T;

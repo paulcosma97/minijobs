@@ -1,5 +1,3 @@
-import {bool} from "aws-sdk/clients/signer";
-
 export enum CategoryType {
     ROOT = 'root',
     IT = 'it',
@@ -41,4 +39,4 @@ const CATEGORIES: Category[] = [
     new Category(CategoryType.PETS, CategoryType.ROOT),
     new Category(CategoryType.HOUSE, CategoryType.ROOT),
     new Category(CategoryType.HOMEWORK, CategoryType.ROOT),
-]
+];

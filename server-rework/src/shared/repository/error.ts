@@ -1,4 +1,4 @@
-import {BaseError} from "../utils/error";
+import {BaseError} from '../utils/error';
 
 export class EntityNotFoundError extends BaseError {
 }

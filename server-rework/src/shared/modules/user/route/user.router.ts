@@ -1,7 +1,7 @@
 import {Inject, Service} from 'typedi';
 import CookieHandler, {CookieHandlerToken} from '../../../cookie/cookie-handler.interface';
 import AbstractExpressRouter from '../../../router/express.router';
-import {isAuthenticated} from "../../../auth/authorizer";
+import {isAuthenticated} from '../../../auth/authorizer';
 
 @Service()
 export class UserRouter extends AbstractExpressRouter {

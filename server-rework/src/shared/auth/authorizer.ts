@@ -1,12 +1,12 @@
 import * as Express from 'express';
-import {Container} from "typedi";
-import {JWTConfigurationToken} from "../config/types/jwt.config";
-import {UserRepositoryToken} from "../modules/user/repository/user.repository";
-import AuthService from "./auth.service";
+import {Container} from 'typedi';
+import {JWTConfigurationToken} from '../config/types/jwt.config';
+import {UserRepositoryToken} from '../modules/user/repository/user.repository';
+import AuthService from './auth.service';
 import {Permission} from './permission.enum';
 import {UnauthorizedError} from './error/auth.errors';
-import JWTToken from "./types/jwt-token.interface";
-import {ForbiddenError} from "../../../../server/src/utils/error-handler";
+import JWTToken from './types/jwt-token.interface';
+import {ForbiddenError} from '../../../../server/src/utils/error-handler';
 
 export function hasPermissions(...permissionsArgs: Permission[]): Express.RequestHandler {
     const permissions = permissionsArgs || [];

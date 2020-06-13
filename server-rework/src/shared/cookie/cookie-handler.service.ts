@@ -8,7 +8,7 @@ export default class CookieHandlerImpl implements CookieHandler {
     constructor(@Inject(HeaderHandlerToken) private headerHandler: HeaderHandler) {}
 
     getCookie(name: string): string {
-        const cookieHeader = this.headerHandler.getHeader('cookie') || this.headerHandler.getHeader('Cookie')
+        const cookieHeader = this.headerHandler.getHeader('cookie') || this.headerHandler.getHeader('Cookie');
         return cookie.parse(cookieHeader)[name];
     }
 

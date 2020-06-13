@@ -8,23 +8,23 @@ export enum Role {
 
 export function permissionsOf(role: Role): Permission[] {
     switch (role) {
-        case Role.MEMBER: {
-            return [
-                Permission.LOGIN,
-                Permission.READ_LISTED_JOBS,
-                Permission.READ_REQUIRED_JOBS,
-                Permission.WRITE_LISTED_JOBS,
-                Permission.WRITE_REQUIRED_JOBS
-            ];
-        }
-        case Role.PREMIUM_MEMBER: {
-            return permissionsOf(Role.MEMBER);
-        }
-        case Role.ADMIN: {
-            return Object.values(Permission);
-        }
-        default: {
-            return [];
-        }
+    case Role.MEMBER: {
+        return [
+            Permission.LOGIN,
+            Permission.READ_LISTED_JOBS,
+            Permission.READ_REQUIRED_JOBS,
+            Permission.WRITE_LISTED_JOBS,
+            Permission.WRITE_REQUIRED_JOBS
+        ];
+    }
+    case Role.PREMIUM_MEMBER: {
+        return permissionsOf(Role.MEMBER);
+    }
+    case Role.ADMIN: {
+        return Object.values(Permission);
+    }
+    default: {
+        return [];
+    }
     }
 }
