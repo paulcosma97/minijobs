@@ -12,3 +12,8 @@ export default function makeConfig<T>(token: Token<T>, value: T) {
         }
     };
 }
+
+export interface ConfigurationPrototype<T> {
+    token: Token<T>
+    value: T
+}

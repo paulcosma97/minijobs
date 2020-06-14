@@ -16,7 +16,7 @@ export default abstract class DynamoRepository<EntityLike extends Entity> implem
         this.database = new DynamoDB.DocumentClient();
     }
 
-    async findOne(key: string): Promise<EntityLike> {
+    async findOne(key: string): Promise<EntityLike | null> {
         try {
             const result = await this.database.get({
                 TableName: this.tableName,
@@ -53,7 +53,7 @@ export default abstract class DynamoRepository<EntityLike extends Entity> implem
         return entity;
     }
 
-    async findOneBy<Key extends keyof EntityLike>(field: Key, value: EntityLike[Key]): Promise<EntityLike> {
+    async findOneBy<Key extends keyof EntityLike>(field: Key, value: EntityLike[Key]): Promise<EntityLike| null> {
         try {
             const result = await this.database.get({
                 TableName: this.tableName,
@@ -61,17 +61,17 @@ export default abstract class DynamoRepository<EntityLike extends Entity> implem
                     [field]: value
                 }
             }).promise();
-            return Optional.of(result.Item as EntityLike);
+            return result.Item as EntityLike;
         } catch (e) {
-            return Optional.empty;
+            return null;
         }
     }
 
     findOneOrFail(key: string): Promise<EntityLike> {
-        return this.findOne(key).then(entity => entity.orThrow(EntityNotFoundError));
+        return this.findOne(key).then(entity => Optional.of(entity).orThrow(new EntityNotFoundError()));
     }
 
     findOneByOrFail<Key extends keyof EntityLike>(field: Key, value: EntityLike[Key]): Promise<EntityLike> {
-        return this.findOneBy(field, value).then(entity => entity.orThrow(EntityNotFoundError));
+        return this.findOneBy(field, value).then(entity => Optional.of(entity).orThrow(new EntityNotFoundError()));
     }
 }

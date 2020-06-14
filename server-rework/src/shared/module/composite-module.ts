@@ -1,5 +1,5 @@
 import Module from './module.interface';
-import ServiceFactory from './factory';
+import {ConfigurationPrototype} from './make-config';
 
 export default class CompositeModule implements Module {
     constructor(private modules: Module[]) {}
@@ -10,5 +10,9 @@ export default class CompositeModule implements Module {
 
     getFactories(): Function[] {
         return this.modules.map(module => (module.getFactories && module.getFactories()) || []).flat();
+    }
+
+    getConfigurations(): ConfigurationPrototype<any>[] {
+        return this.modules.map(module => (module.getConfigurations && module.getConfigurations()) || []).flat();
     }
 }

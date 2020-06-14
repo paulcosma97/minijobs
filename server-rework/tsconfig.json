@@ -3,6 +3,7 @@
         "rootDir": ".",
         "outDir": "build",
         "module": "CommonJS",
+        "strictNullChecks": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "target": "ES2020",

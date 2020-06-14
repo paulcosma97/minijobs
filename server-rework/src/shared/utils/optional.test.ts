@@ -1,67 +1,68 @@
-import test  from 'ava';
 import Optional from './optional';
-import {BaseError} from './error';
+import {GenericServerError} from './error';
+import { expect } from 'chai';
 
-const throwsOn = [undefined, null];
-const passableValues = [0, 1, true, false, [], {}, '', 'test'];
+const throwsOn: any[] = [undefined, null];
+const passableValues: any[] = [0, 1, true, false, [], {}, '', 'test'];
 
-test('Optional#of', it => {
-    it.truthy(Optional.of);
-    it.true(Optional.of(null) instanceof Optional);
-});
+describe('Optional', () => {
+    it('#of', () => {
+        expect(Optional.of(null) instanceof Optional).to.be.true;
+    });
 
-test('Optional#get', it => {
-    for (const passableValue of passableValues) {
-        it.is(Optional.of(passableValue).get(), passableValue);
-    }
+    it('#get', () => {
+        for (const passableValue of passableValues) {
+            expect(Optional.of(passableValue).get()).to.equal(passableValue);
+        }
 
-    for (const throwsOnElement of throwsOn) {
-        it.throws(() => Optional.of(throwsOnElement).get());
-    }
-});
+        for (const throwsOnElement of throwsOn) {
+            expect(() => Optional.of(throwsOnElement).get()).to.throw();
+        }
+    });
 
-test('Optional#isEmpty', it => {
-    for (const passableValue of passableValues) {
-        it.false(Optional.of(passableValue).isEmpty());
-    }
+    it('#isEmpty', () => {
+        for (const passableValue of passableValues) {
+            expect(Optional.of(passableValue).isEmpty()).to.be.false;
+        }
 
-    for (const throwsOnElement of throwsOn) {
-        it.true(Optional.of(throwsOnElement).isEmpty());
-    }
-});
+        for (const throwsOnElement of throwsOn) {
+            expect(Optional.of(throwsOnElement).isEmpty()).to.be.true;
+        }
+    });
 
-test('Optional#exists', it => {
-    for (const passableValue of passableValues) {
-        it.true(Optional.of(passableValue).exists());
-    }
+    it('#exists', () => {
+        for (const passableValue of passableValues) {
+            expect(Optional.of(passableValue).exists()).to.be.true;
+        }
 
-    for (const throwsOnElement of throwsOn) {
-        it.false(Optional.of(throwsOnElement).exists());
-    }
-});
+        for (const throwsOnElement of throwsOn) {
+            expect(Optional.of(throwsOnElement).exists()).to.be.false
+        }
+    });
 
-test('Optional#orElse', it => {
-    for (const passableValue of passableValues) {
-        it.is(Optional.of(passableValue).orElse(100), passableValue);
-    }
+    it('#orElse', () => {
+        for (const passableValue of passableValues) {
+            expect(Optional.of(passableValue).orElse(100)).to.equal(passableValue);
+        }
 
-    for (const throwsOnElement of throwsOn) {
-        it.is(Optional.of(throwsOnElement).orElse(1), 1);
-    }
-});
+        for (const throwsOnElement of throwsOn) {
+            expect(Optional.of(throwsOnElement).orElse(1)).to.equal(1);
+        }
+    });
 
-test('Optional#orThrow', it => {
-    class CustomError extends BaseError {}
-    const throwsCustomError = () => {
-        throw new CustomError();
-    };
+    it('#orThrow', () => {
+        const throwsCustomError = () => {
+            throw new GenericServerError();
+        };
 
-    for (const passableValue of passableValues) {
-        it.is(Optional.of(passableValue).orThrow(new CustomError()), passableValue);
-    }
+        for (const passableValue of passableValues) {
+            expect(Optional.of(passableValue).orThrow(new GenericServerError())).to.equal(passableValue);
+        }
 
-    for (const throwsOnElement of throwsOn) {
-        it.throws(() => Optional.of(throwsOnElement).orThrow(new CustomError()));
-        it.throws(() => Optional.of(throwsOnElement).orThrow(throwsCustomError));
-    }
-});
+        for (const throwsOnElement of throwsOn) {
+            expect(() => Optional.of(throwsOnElement).orThrow(new GenericServerError())).to.throw;
+            expect(() => Optional.of(throwsOnElement).orThrow(throwsCustomError)).to.throw;
+        }
+    });
+})
+

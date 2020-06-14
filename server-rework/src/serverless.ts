@@ -1,6 +1,9 @@
+import 'reflect-metadata';
 import * as AWSLambda from 'aws-lambda';
 import * as AWSServerlessExpress from 'aws-serverless-express';
 import * as Express from 'express';
+import {Container} from 'typedi';
+import {APIGatewayEventToken} from './shared/request/lambda.interface';
 
 const app = Express();
 
@@ -34,6 +37,7 @@ const server = AWSServerlessExpress.createServer(app);
 // })();
 
 export const handler = (event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context) => {
+    Container.set(APIGatewayEventToken, event);
     return AWSServerlessExpress.proxy(server, event, context);
 
     // Container.set(APIGatewayEventToken, event);

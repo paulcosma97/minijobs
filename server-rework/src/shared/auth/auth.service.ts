@@ -7,6 +7,7 @@ import FacebookProfile from './types/facebook-profile.dto';
 import User from '../modules/user/model/user.model';
 import {Response} from 'express';
 import UserRepository, {UserRepositoryToken} from '../modules/user/repository/user.repository';
+import {permissionsOf, Role} from './role.enum';
 
 @Service()
 export default class AuthService {
@@ -37,9 +38,9 @@ export default class AuthService {
     }
 
     private async getOrCreateUser(data: FacebookProfile): Promise<User> {
-        const userOptional = await this.userRepository.findOneBy('email', data.email);
-        if (userOptional.exists()) {
-            return userOptional.get();
+        const user = await this.userRepository.findOneBy('email', data.email);
+        if (user) {
+            return user;
         }
 
         return this.userRepository.saveOne({
@@ -49,7 +50,7 @@ export default class AuthService {
             lastName: data.last_name,
             ownRatings: [],
             picture: '',
-            permissions: []
+            permissions: permissionsOf(Role.MEMBER)
         });
     }
 

@@ -8,6 +8,7 @@ import Container from 'typedi';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import { ExpressRequestToken, ExpressResponseToken } from './request/express.interface';
+import {ConfigurationPrototype} from './module/make-config';
 
 const isExpressRouter = (instance: any): instance is ExpressRouter => !!instance.getRouter;
 
@@ -33,10 +34,20 @@ export default class AppModule {
 
     initializeDeclarations(): void {
         const module = new CompositeModule(this.modules);
+        const configs = module.getConfigurations();
         const declarations = module.getDeclarations();
         Container.import(declarations);
+        // Container.set({
+        //
+        // })
 
         const factories = module.getFactories();
+
+        configs
+            .forEach((config: ConfigurationPrototype<any>) =>
+                Container.set(config.token, config.value)
+            );
+
         Container.import(factories);
         factories
             .map(factoryClass => Container.get(factoryClass))

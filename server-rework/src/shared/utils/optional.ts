@@ -1,6 +1,6 @@
-import {BaseError} from './error';
+import {BaseError, GenericServerError} from './error';
 
-export class EmptyOptionalError extends BaseError {}
+export class EmptyOptionalError extends GenericServerError {}
 type ResOrResFn<T> = (() => T) | T;
 
 export default class Optional<T> {
@@ -22,7 +22,7 @@ export default class Optional<T> {
             throw new EmptyOptionalError();
         }
 
-        return this.item;
+        return this.item as T;
     }
 
     orThrow<Err extends BaseError>(e: ResOrResFn<Err>): T | never {
@@ -34,7 +34,7 @@ export default class Optional<T> {
             }
         }
 
-        return this.item;
+        return this.item as T;
     }
 
     orElse(other: T): T {
@@ -42,7 +42,7 @@ export default class Optional<T> {
             return other;
         }
 
-        return this.item;
+        return this.item as T;
     }
 
     exists(): boolean {

@@ -14,8 +14,14 @@ export default class UserModule implements Module {
 
     getFactories() {
         return [
-            UserRepositoryFactory,
-            makeConfig(UserConfigurationToken, userConfig)
+            UserRepositoryFactory
         ];
+    }
+
+    getConfigurations() {
+        return [{
+            token: UserConfigurationToken,
+            value: userConfig
+        }]
     }
 }

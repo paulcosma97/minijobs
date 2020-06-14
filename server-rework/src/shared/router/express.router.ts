@@ -1,5 +1,7 @@
 import ExpressRouter from './express-router.interface';
 import { Router, RequestHandler } from 'express';
+import ErrorRouteHandler from '../error/error.route-handler';
+import {Container} from 'typedi';
 
 export default abstract class AbstractExpressRouter implements ExpressRouter {
     private router = Router();
@@ -12,8 +14,10 @@ export default abstract class AbstractExpressRouter implements ExpressRouter {
         return this.router;
     }
 
-    private createRoute(path: string, method: string, ...handler: RequestHandler[]): void {
-        this.router[method](path, ...handler);
+    private createRoute(path: string, method: string, ...handlers: RequestHandler[]): void {
+        const errorHandler = Container.get(ErrorRouteHandler);
+
+        this.router[method](path, ...handlers.map(errorHandler.handleRoute));
         console.log(
             `📦  Created endpoint: ${method} @ ${this.resourcePath}${path === '/' ? '' : path}`
         );

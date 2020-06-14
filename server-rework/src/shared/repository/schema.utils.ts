@@ -1,2 +1,2 @@
-export type PrimaryKey = string;
+export type PrimaryKey = string | null;
 export type ForeignKey<ExtendedEntity> = string;
