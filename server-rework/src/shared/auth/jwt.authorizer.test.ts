@@ -8,7 +8,7 @@ import {rejects} from 'assert';
 import {UnauthorizedError} from './error/auth.errors';
 
 
-describe('JWTAuthorier', () => {
+describe('JWTAuthorizer', () => {
     describe('#decodeRawToken', () => {
         it('succeeds using a valid token', async () => {
             const authService = Container.get(AuthService);
