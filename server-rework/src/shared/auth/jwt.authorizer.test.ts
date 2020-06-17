@@ -8,6 +8,7 @@ import {rejects} from 'assert';
 import {UnauthorizedError} from './error/auth.errors';
 import * as Express from 'express';
 import User from '../modules/user/model/user.model';
+import {JWTConfigurationToken} from '../config/types/jwt.config';
 
 describe('JWTAuthorizer', () => {
     describe('#decodeRawToken', () => {
@@ -77,5 +78,20 @@ describe('JWTAuthorizer', () => {
                 user: 'my-user'
             });
         });
+    });
+
+    it('#shouldTokenBeRefreshed', () => {
+        const jwtAuthorizer = Container.get(JWTAuthorizer);
+        const jwtConfig = Container.get(JWTConfigurationToken);
+
+        expect(jwtAuthorizer.shouldTokenBeRefreshed({
+            expires: Date.now() - jwtConfig.maxAge,
+            email: ''
+        })).to.be.true;
+
+        expect(jwtAuthorizer.shouldTokenBeRefreshed({
+            expires: Date.now() - 1,
+            email: ''
+        })).to.be.false;
     });
 });

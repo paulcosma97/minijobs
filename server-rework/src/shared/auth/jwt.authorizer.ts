@@ -34,7 +34,7 @@ export default class JWTAuthorizer {
     }
 
     shouldTokenBeRefreshed(token: JWTToken): boolean {
-        return new Date().getTime() - token.expires < this.jwtConfig.maxAge / 2;
+        return Date.now() - this.jwtConfig.maxAge / 2 > token.expires;
     }
 
     setContextUser(res: express.Response, user: User): void {
