@@ -12,5 +12,5 @@
             "DOM"
         ]
     },
-    "exclude": ["src/serverful.ts"]
+    "exclude": ["src/**/*.test.ts"]
 }

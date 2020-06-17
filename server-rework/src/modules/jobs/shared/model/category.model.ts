@@ -1,3 +1,6 @@
+import {GenericServerError} from "../../../../shared/utils/error";
+import {Nullable} from "../../../../shared/utils/helper-types";
+
 export enum CategoryType {
     ROOT = 'root',
     IT = 'it',
@@ -8,12 +11,12 @@ export enum CategoryType {
 }
 
 export class Category {
-    public readonly parent: Category;
+    public readonly parent: Nullable<Category>;
 
     constructor(
-        public readonly type: CategoryType, parent: CategoryType
+        public readonly type: CategoryType, parent: Nullable<CategoryType>
     ) {
-        this.parent = Category.getJobCategory(parent);
+        this.parent = parent ? Category.getJobCategory(parent) : null;
     }
 
     get children(): Category[] {
@@ -25,7 +28,13 @@ export class Category {
     }
 
     static getJobCategory(type: CategoryType): Category {
-        return CATEGORIES.find(category => category.type === type);
+        const category = CATEGORIES.find(category => category.type === type);
+
+        if (!category) {
+            throw new GenericServerError(`Could not find category by type: ${type}.`)
+        }
+
+        return category;
     }
 }
 
