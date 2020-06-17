@@ -18,8 +18,8 @@ export default class AuthService {
 
     public decodeToken(token: string): Promise<JWTToken> {
         return new Promise((resolve, reject) => {
-            verify(token, this.jwtConfig.secret, (err, decoded) =>
-                err ? reject() : resolve(decoded)
+            verify(token, this.jwtConfig.secret, (err, decoded: JWTToken) =>
+                err || decoded.expires <= Date.now() ? reject() : resolve(decoded)
             );
         });
     }
