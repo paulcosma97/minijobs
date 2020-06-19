@@ -24,7 +24,7 @@ export class ForbiddenError extends BaseError {
         super(msg);
     }
 
-    async handle(res: Express.Response): Promise<ErrorResponse> {
+    async handle(): Promise<ErrorResponse> {
         return {
             statusCode: 403,
             i18n: 'errors.forbidden'

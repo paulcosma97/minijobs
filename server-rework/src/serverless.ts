@@ -36,7 +36,7 @@ const server = AWSServerlessExpress.createServer(app);
 //     });
 // })();
 
-export const handler = (event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context) => {
+export const handler = (event: AWSLambda.APIGatewayEvent, context: AWSLambda.Context): any => {
     Container.set(APIGatewayEventToken, event);
     return AWSServerlessExpress.proxy(server, event, context);
 

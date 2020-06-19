@@ -1,5 +1,5 @@
-import {GenericServerError} from "../../../../shared/utils/error";
-import {Nullable} from "../../../../shared/utils/helper-types";
+import {GenericServerError} from '../../../../shared/utils/error';
+import {Nullable} from '../../../../shared/utils/helper-types';
 
 export enum CategoryType {
     ROOT = 'root',

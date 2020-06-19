@@ -63,7 +63,7 @@ export default class AuthService {
             .then(res => res.data);
     }
 
-    async setAuthCookie(user: User, response: Response) {
+    async setAuthCookie(user: User, response: Response): Promise<void> {
         response.clearCookie(this.jwtConfig.cookieName);
 
         const token = await this.encodeToken({
