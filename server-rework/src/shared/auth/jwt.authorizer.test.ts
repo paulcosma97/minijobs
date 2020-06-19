@@ -9,13 +9,19 @@ import {UnauthorizedError} from './error/auth.errors';
 import * as Express from 'express';
 import User from '../modules/user/model/user.model';
 import {JWTConfigurationToken} from '../config/types/jwt.config';
+import {Permission} from './permission.enum';
+import sinon from 'ts-sinon';
+import {UserRepositoryToken} from '../modules/user/repository/user.repository';
+import {EntityNotFoundError} from '../repository/error';
 
 describe('JWTAuthorizer', () => {
+    const authService = Container.get(AuthService);
+    const jwtAuthorizer = Container.get(JWTAuthorizer);
+    const jwtConfig = Container.get(JWTConfigurationToken);
+    const userRepository = Container.get(UserRepositoryToken);
+
     describe('#decodeRawToken', () => {
         it('succeeds using a valid token', async () => {
-            const authService = Container.get(AuthService);
-            const jwtAuthorizer = Container.get(JWTAuthorizer);
-
             const inputToken: JWTToken = {
                 expires: Date.now() + 9000,
                 email: 'example@email.com'
@@ -28,15 +34,10 @@ describe('JWTAuthorizer', () => {
         });
 
         it('throws Unauthorized using invalid token', async () => {
-            const jwtAuthorizer = Container.get(JWTAuthorizer);
-
             await rejects(jwtAuthorizer.decodeRawToken('blah'), UnauthorizedError);
         });
 
         it('throws Unauthorized on expired token', async () => {
-            const authService = Container.get(AuthService);
-            const jwtAuthorizer = Container.get(JWTAuthorizer);
-
             const inputToken: JWTToken = {
                 expires: Date.now() - 1,
                 email: 'example@email.com'
@@ -49,7 +50,6 @@ describe('JWTAuthorizer', () => {
 
     describe('#setContextUser', () => {
         it('sets user in the context without overriding existing values', () => {
-            const jwtAuthorizer = Container.get(JWTAuthorizer);
             const res: Express.Response = {
                 locals: {
                     otherValue: true
@@ -66,7 +66,6 @@ describe('JWTAuthorizer', () => {
         });
 
         it('sets user in the empty context', () => {
-            const jwtAuthorizer = Container.get(JWTAuthorizer);
             const res: Express.Response = {
                 locals: undefined
             } as any;
@@ -81,9 +80,6 @@ describe('JWTAuthorizer', () => {
     });
 
     it('#shouldTokenBeRefreshed', () => {
-        const jwtAuthorizer = Container.get(JWTAuthorizer);
-        const jwtConfig = Container.get(JWTConfigurationToken);
-
         expect(jwtAuthorizer.shouldTokenBeRefreshed({
             expires: Date.now() - jwtConfig.maxAge,
             email: ''
@@ -93,5 +89,90 @@ describe('JWTAuthorizer', () => {
             expires: Date.now() - 1,
             email: ''
         })).to.be.false;
+    });
+
+    describe('#assertPermissions', () => {
+        it('asserts correctly subset of 2 permissions', () => {
+            const user: User = {
+                permissions: [
+                    Permission.LOGIN,
+                    Permission.READ_LISTED_JOBS,
+                    Permission.WRITE_LISTED_JOBS
+                ]
+            } as any;
+
+            const requiredPermissions: Permission[] = [
+                Permission.READ_LISTED_JOBS,
+                Permission.WRITE_LISTED_JOBS
+            ];
+
+            expect(() => jwtAuthorizer.assertPermissions(user, requiredPermissions)).to.not.throw();
+        });
+
+        it('asserts correctly subset of 1 permissions', () => {
+            const user: User = {
+                permissions: [
+                    Permission.LOGIN,
+                    Permission.READ_LISTED_JOBS,
+                    Permission.WRITE_LISTED_JOBS
+                ]
+            } as any;
+
+            const requiredPermissions: Permission[] = [
+                Permission.READ_LISTED_JOBS
+            ];
+
+            expect(() => jwtAuthorizer.assertPermissions(user, requiredPermissions)).to.not.throw();
+        });
+
+        it('asserts correctly subset of 0 permissions', () => {
+            const user: User = {
+                permissions: [
+                    Permission.LOGIN,
+                    Permission.READ_LISTED_JOBS,
+                    Permission.WRITE_LISTED_JOBS
+                ]
+            } as any;
+
+            const requiredPermissions: Permission[] = [];
+
+            expect(() => jwtAuthorizer.assertPermissions(user, requiredPermissions)).to.not.throw();
+        });
+    });
+
+    describe('#extractUser', () => {
+        const user: User = {
+            firstName: 'Test',
+            email: 'user@email.com'
+        } as any;
+
+        sinon.replace(userRepository, 'findOneByOrFail', async <Key extends keyof User>(field: Key, value: User[Key]) => {
+            expect(field).to.equal('email');
+            if (value === user.email) {
+                return user;
+            }
+
+            throw new EntityNotFoundError();
+        });
+
+        after(() => {
+            sinon.restore();
+        });
+
+        it('correctly extracts existing user', async () => {
+            const foundUser = await jwtAuthorizer.extractUser({
+                expires: Date.now(),
+                email: user.email
+            });
+
+            expect(foundUser).to.deep.equal(user);
+        });
+
+        it('correctly extracts non-existing user', async () => {
+            await rejects(jwtAuthorizer.extractUser({
+                expires: Date.now(),
+                email: 'unknown@who-knows.io'
+            }), UnauthorizedError);
+        });
     });
 });
