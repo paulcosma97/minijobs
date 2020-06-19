@@ -13,5 +13,8 @@ export class UserRouter extends AbstractExpressRouter {
         res.json({
             ...res.locals.user,
             password: undefined
-        }));
+        })
+    );
+
+    // login = this.post('/login', )
 }

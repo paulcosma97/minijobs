@@ -5,7 +5,7 @@
   "main": "src/serverful.ts",
   "scripts": {
     "start": "node -r ts-node/register --inspect src/serverful.ts",
-    "test": "mocha -r ts-node/register --inspect src/**/*.test.ts",
+    "test": "mocha -r ts-node/register --inspect src/mocha-runner.ts src/**/*.test.ts",
     "lint": "npx eslint src",
     "lint:fix": "npx eslint src --fix",
     "build": "bash ./scripts/build.sh"
@@ -40,6 +40,7 @@
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cookie": "^0.4.0",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",

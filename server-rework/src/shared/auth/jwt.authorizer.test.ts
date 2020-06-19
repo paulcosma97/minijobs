@@ -1,4 +1,4 @@
-import '../../main';
+import '../../mocha-runner';
 import JWTAuthorizer from './jwt.authorizer';
 import {Container} from 'typedi';
 import AuthService from './auth.service';
@@ -13,6 +13,7 @@ import {Permission} from './permission.enum';
 import sinon from 'ts-sinon';
 import {UserRepositoryToken} from '../modules/user/repository/user.repository';
 import {EntityNotFoundError} from '../repository/error';
+
 
 describe('JWTAuthorizer', () => {
     const authService = Container.get(AuthService);

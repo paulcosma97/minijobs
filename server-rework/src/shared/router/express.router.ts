@@ -7,7 +7,7 @@ export default abstract class AbstractExpressRouter implements ExpressRouter {
     private router = Router();
 
     constructor(public resourcePath: string) {
-        console.log(`🌌  Initialized router for resource ${this.resourcePath}.`);
+        console.log(`Registered router for resource ${this.resourcePath}.`);
     }
 
     getRouter(): Router {
@@ -19,7 +19,7 @@ export default abstract class AbstractExpressRouter implements ExpressRouter {
 
         this.router[method](path, ...handlers.map(errorHandler.handleRoute));
         console.log(
-            `📦  Created endpoint: ${method} @ ${this.resourcePath}${path === '/' ? '' : path}`
+            `\tRegistered endpoint: ${method} @ ${this.resourcePath}${path === '/' ? '' : path}`
         );
     }
 

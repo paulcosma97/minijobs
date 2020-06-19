@@ -1,10 +1,20 @@
 import 'reflect-metadata';
 import appModule from './main';
+import {Container} from 'typedi';
+import {ServerPortToken} from './shared/request/express.interface';
+import {globalEventEmitter} from './shared/utils/global-event-emitter';
+import { createServer } from 'http';
 
 (async () => {
-    const port = 3000;
+    const port = Container.get(ServerPortToken);
+    const httpServer = createServer(appModule.application);
 
-    appModule.application.listen(port, () =>
-        console.log(`\n🔥🔥🔥  Server listening on port ${port}.`)
-    );
+    httpServer.listen(port, () => {
+        console.log(`\nServer listening on port ${port}.`);
+        globalEventEmitter.emit('server:start');
+    });
+
+    globalEventEmitter.once('server:stop', () => {
+        httpServer.close();
+    })
 })();

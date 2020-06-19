@@ -5,6 +5,8 @@ export default interface ServerConfiguration {
     basePath: string;
     serverless: boolean;
     environment: string;
+    runningTests: boolean;
+    runningCI: boolean;
 }
 
 export const ServerConfigurationToken = new Token<ServerConfiguration>('ServerConfiguration');

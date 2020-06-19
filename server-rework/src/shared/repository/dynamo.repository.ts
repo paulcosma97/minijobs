@@ -9,11 +9,9 @@ import {EntityNotFoundError} from './error';
 
 export default abstract class DynamoRepository<EntityLike extends Entity> implements Repository<EntityLike> {
     protected tableName: string;
-    protected database: DynamoDB.DocumentClient;
 
-    constructor(tableName: string, serverConfig: ServerConfiguration) {
+    constructor(tableName: string, serverConfig: ServerConfiguration, protected database: DynamoDB.DocumentClient) {
         this.tableName = `mj-${serverConfig.environment}-${tableName}`;
-        this.database = new DynamoDB.DocumentClient();
     }
 
     async findOne(key: string): Promise<EntityLike | null> {

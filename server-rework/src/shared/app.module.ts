@@ -4,10 +4,16 @@ import ExpressRouter from './router/express-router.interface';
 import ServiceFactory from './module/factory';
 import * as express from 'express';
 import * as cors from 'cors';
+import * as cookieParser from 'cookie-parser';
 import Container from 'typedi';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
-import { ExpressRequestToken, ExpressResponseToken } from './request/express.interface';
+import {
+    ExpressApplicationToken,
+    ExpressRequestToken,
+    ExpressResponseToken,
+    ServerPortToken
+} from './request/express.interface';
 import {ConfigurationPrototype} from './module/make-config';
 
 const isExpressRouter = (instance: any): instance is ExpressRouter => !!instance.getRouter;
@@ -24,12 +30,15 @@ export default class AppModule {
         this.expressApp.use('*', cors());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
         this.expressApp.use(bodyParser.json());
+        this.expressApp.use(cookieParser());
         this.expressApp.use('*', compression());
         this.expressApp.use('*', (req, res, next) => {
             Container.set(ExpressRequestToken, req);
             Container.set(ExpressResponseToken, res);
             next();
         });
+        Container.set(ExpressApplicationToken, this.expressApp);
+        Container.set(ServerPortToken, 3000);
     }
 
     initializeDeclarations(): void {
@@ -37,9 +46,6 @@ export default class AppModule {
         const configs = module.getConfigurations();
         const declarations = module.getDeclarations();
         Container.import(declarations);
-        // Container.set({
-        //
-        // })
 
         const factories = module.getFactories();
 
@@ -59,7 +65,6 @@ export default class AppModule {
             .map(declaration => Container.get(declaration))
             .filter(isExpressRouter)
             .forEach(router => {
-                console.info(`Found express router ${router.constructor.name}.`);
                 this.expressApp.use(router.resourcePath, router.getRouter());
             });
     }
