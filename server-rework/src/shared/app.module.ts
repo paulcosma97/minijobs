@@ -27,7 +27,10 @@ export default class AppModule {
     }
 
     private init(): void {
-        this.expressApp.use('*', cors());
+        this.expressApp.use('*', cors({
+            origin: (_, cb) => cb(null, true),
+            credentials: true
+        }));
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
         this.expressApp.use(bodyParser.json());
         this.expressApp.use(cookieParser());
@@ -35,6 +38,8 @@ export default class AppModule {
         this.expressApp.use('*', (req, res, next) => {
             Container.set(ExpressRequestToken, req);
             Container.set(ExpressResponseToken, res);
+
+            console.log(`Request: ${new Date().toISOString()} - ${req.method} @ ${req.path}`);
             next();
         });
         Container.set(ExpressApplicationToken, this.expressApp);

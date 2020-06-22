@@ -1,0 +1,37 @@
+.mj-button {
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    padding-left: 2.5em;
+    padding-right: 2.5em;
+    border-radius: 17px;
+    font-size: 1em;
+    outline: none;
+    margin: 0.5em;
+}
+
+.mj-button-primary {
+    background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+}
+
+.mj-button-primary:active {
+    background: var(--ion-color-primary-shade);
+}
+
+.mj-button-secondary {
+    background: var(--ion-color-secondary);
+    color: var(--ion-color-secondary-contrast);
+}
+
+.mj-button-secondary:active {
+    background: var(--ion-color-secondary-shade);
+}
+
+.mj-button-tertiary {
+    background: var(--ion-color-tertiary);
+    color: var(--ion-color-tertiary-contrast);
+}
+
+.mj-button-tertiary:active {
+    background: var(--ion-color-tertiary-shade);
+}

@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin&display=swap');
+
+/** Overrides */
+
+* {
+    font-family: 'Cabin', sans-serif;
+}
+
+ion-button {
+    --padding-bottom: 2em;
+    --padding-top: 2em;
+    --padding-start: 3em;
+    --padding-end: 3em;
+}

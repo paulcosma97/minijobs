@@ -7,6 +7,7 @@ export default interface ServerConfiguration {
     environment: string;
     runningTests: boolean;
     runningCI: boolean;
+    runningLocally: boolean;
 }
 
 export const ServerConfigurationToken = new Token<ServerConfiguration>('ServerConfiguration');

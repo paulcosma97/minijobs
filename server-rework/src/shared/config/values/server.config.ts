@@ -6,5 +6,6 @@ export const serverConfiguration: ServerConfiguration = {
     serverless: !!process.env.SERVERLESS || false,
     environment: process.env.PRODUCTION ? 'production' : 'dev',
     runningCI: !!process.env.CI,
-    runningTests: false
+    runningTests: false,
+    runningLocally: true
 };

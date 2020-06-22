@@ -18,7 +18,7 @@ export default class DynamoDocumentClientFactory implements ServiceFactory<Dynam
     }
 
     build(): DynamoDB.DocumentClient {
-        if (this.serverConfiguration.runningTests) {
+        if (this.serverConfiguration.runningTests || this.serverConfiguration.runningLocally) {
             console.log('DynamoDocumentClientFactory', '- proceeding with dummy implementation of DynamoDB.DocumentClient')
             return this.dummyDocumentClient;
         } else {

@@ -1,11 +1,12 @@
-import {Inject, Service} from 'typedi';
-import CookieHandler, {CookieHandlerToken} from '../../../cookie/cookie-handler.interface';
+import {Service} from 'typedi';
 import AbstractExpressRouter from '../../../router/express.router';
 import {isAuthenticated} from '../../../auth/authorizer';
+import UserService from '../service/user.service';
+import CredentialsDto, {assertValidCredentialsDto} from '../dto/credentials.dto';
 
 @Service()
 export class UserRouter extends AbstractExpressRouter {
-    constructor(@Inject(CookieHandlerToken) private cookieHandler: CookieHandler) {
+    constructor(private userService: UserService) {
         super('/users');
     }
 
@@ -16,5 +17,10 @@ export class UserRouter extends AbstractExpressRouter {
         })
     );
 
-    // login = this.post('/login', )
+    login = this.post('/login', async (req, res) => {
+        const credentials: CredentialsDto = req.body;
+        await assertValidCredentialsDto(credentials);
+        const user = await this.userService.login(credentials, res);
+        res.json(user);
+    });
 }
