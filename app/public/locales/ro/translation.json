@@ -1,0 +1,13 @@
+{
+  "module": {
+    "home": {
+      "title": "Acasă"
+    },
+    "jobs": {
+      "title": "Treburi"
+    },
+    "settings": {
+      "title": "Setări"
+    }
+  }
+}

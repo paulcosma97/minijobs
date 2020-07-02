@@ -9,8 +9,14 @@
     margin: 0.5em;
 }
 
+.mj-button {
+    transition: background-color 0.2s ease;
+}
+
 .mj-button-primary {
-    background: var(--ion-color-primary);
+
+    background-color: var(--ion-color-primary);
+
     color: var(--ion-color-primary-contrast);
 }
 
@@ -33,5 +39,5 @@
 }
 
 .mj-button-tertiary:active {
-    background: var(--ion-color-tertiary-shade);
+    background-color: var(--ion-color-tertiary-shade);
 }

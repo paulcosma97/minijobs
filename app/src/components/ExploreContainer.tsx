@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './ExploreContainer.css';
-import {IonButton, IonToast, isPlatform} from "@ionic/react";
+import {isPlatform} from "@ionic/react";
 import {Plugins} from "@capacitor/core";
 import axios from 'axios';
-import MJButton from "./MJButton";
+import MJButton from "../shared/components/mj-button/MJButton";
 
 interface ContainerProps {
   name: string;
 }
 
-declare var FB: any;
+declare const FB: any;
 
 async function onSignIn(): Promise<any> {
     let token: string;
@@ -64,8 +64,8 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
         <br/>
 
         <MJButton>My Day</MJButton>
-        <MJButton styleType='secondary'>My Day</MJButton>
-        <MJButton styleType='tertiary'>My Day</MJButton>
+        <MJButton type='secondary'>My Day</MJButton>
+        <MJButton type='tertiary'>My Day</MJButton>
     </div>
   );
 };
