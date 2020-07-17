@@ -29,8 +29,13 @@ export default class AuthService {
         );
     }
 
-    async setAuthCookie(user: User, response: Response): Promise<void> {
+    clearCookie(response: Response): void {
         response.clearCookie(this.jwtConfig.cookieName);
+
+    }
+
+    async setAuthCookie(user: User, response: Response): Promise<void> {
+        this.clearCookie(response);
 
         const token: JWTToken = {
             email: user.email,

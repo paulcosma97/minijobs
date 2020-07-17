@@ -4,6 +4,9 @@ import App from './App';
 import './shared/utils/i18n';
 import * as serviceWorker from './serviceWorker';
 import {defineCustomElements} from "@ionic/pwa-elements/loader";
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

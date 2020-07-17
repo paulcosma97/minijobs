@@ -23,4 +23,9 @@ export class UserRouter extends AbstractExpressRouter {
         const user = await this.userService.login(credentials, res);
         res.json(user);
     });
+
+    logout = this.post('/logout', isAuthenticated, (_, res) => {
+        this.userService.logout(res);
+        res.send();
+    });
 }

@@ -7,12 +7,14 @@ import SocialAuthUser from './social-auth/social-auth-user.model';
 import {permissionsOf, Role} from '../../../auth/role.enum';
 import { Response } from 'express';
 import JWTAuthorizer from '../../../auth/jwt.authorizer';
+import AuthService from "../../../auth/auth.service";
 
 @Service()
 export default class UserService {
     constructor(
         @Inject(UserRepositoryToken) private userRepository: UserRepository,
-        private jwtAuthorizer: JWTAuthorizer
+        private jwtAuthorizer: JWTAuthorizer,
+        private authService: AuthService
     ) {}
 
     async login(credentials: CredentialsDto, res: Response): Promise<User> {
@@ -27,6 +29,10 @@ export default class UserService {
 
         await this.jwtAuthorizer.setToken(res, user);
         return user;
+    }
+
+    logout(res: Response): void {
+        this.authService.clearCookie(res);
     }
 
     private createUser(proto: SocialAuthUser): Promise<User> {
